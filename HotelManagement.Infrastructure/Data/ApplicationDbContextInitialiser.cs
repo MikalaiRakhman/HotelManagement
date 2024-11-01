@@ -29,8 +29,8 @@ namespace HotelManagement.Infrastructure.Data
 		{
 			try
 			{
-				var adminId = new Guid();
-				var roomOneId = new Guid();				
+				var adminId = Guid.NewGuid();
+				var suitRoomId = Guid.NewGuid();
 
 				if (!_context.Users.Any()) 
 				{
@@ -38,6 +38,7 @@ namespace HotelManagement.Infrastructure.Data
 						(
 							new User
 							{
+								Id = adminId,
 								FirstName = "Mikalai",
 								LastName = "Rakhman",
 								Email = "rakhmanmikalai@gmail.com"
@@ -55,6 +56,8 @@ namespace HotelManagement.Infrastructure.Data
 								Email = "champ@boxing.com"
 							}
 						);
+
+					await _context.SaveChangesAsync();
 				}
 				if (!_context.Rooms.Any())
 				{
@@ -62,6 +65,7 @@ namespace HotelManagement.Infrastructure.Data
 						(
 							new Room
 							{
+								Id = suitRoomId,
 								RoomNumber = 1,
 								RoomType = RoomType.Suite,
 								PricePerNight = 1000,
@@ -77,7 +81,7 @@ namespace HotelManagement.Infrastructure.Data
 							new Room
 							{
 								RoomNumber = 3,
-								RoomType= RoomType.King_Room,
+								RoomType = RoomType.King_Room,
 								PricePerNight = 500,
 								IsAvailable = true,
 							},
@@ -89,23 +93,25 @@ namespace HotelManagement.Infrastructure.Data
 								IsAvailable = true,
 							}
 						);
+
+					await _context.SaveChangesAsync();
 				}
 				if (!_context.Bookings.Any())
 				{
-					await _context.Bookings.AddRangeAsync
+					await _context.Bookings.AddAsync
 						(
 							new Booking
 							{
 								UserId = adminId,
-								RoomId = roomOneId,
+								RoomId = suitRoomId,
 								StartDate = DateTime.Now,
 								EndDate = DateTime.Now.AddDays(3),
 								TotalPrice = 3000
 							}
 						);
-				}
 
-				await _context.SaveChangesAsync();
+					await _context.SaveChangesAsync();
+				}
 			}
 			catch (Exception ex)
 			{
