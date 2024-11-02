@@ -17,6 +17,7 @@ namespace HotelManagement.Application.Bookings.Queries
 		{
 			_context = context;
 		}
+
 		public async Task<List<Booking>> Handle(GetAllBookings request, CancellationToken cancellationToken)
 		{
 			return await _context.Bookings

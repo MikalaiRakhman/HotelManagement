@@ -18,9 +18,7 @@
   <ItemGroup>
     <Folder Include="Bookings\Commands\" />
     <Folder Include="Rooms\Commands\" />
-    <Folder Include="Rooms\Queries\" />
     <Folder Include="Users\Commands\" />
-    <Folder Include="Users\Queries\" />
   </ItemGroup>
 
 </Project>
