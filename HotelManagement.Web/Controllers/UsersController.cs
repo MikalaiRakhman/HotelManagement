@@ -1,4 +1,5 @@
-﻿using HotelManagement.Application.Users.Queries;
+﻿using HotelManagement.Application.Users.Commands;
+using HotelManagement.Application.Users.Queries;
 using HotelManagement.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,36 @@ namespace HotelManagement.Web.Controllers
 			}
 
 			return Ok(users);
+		}
+
+		[HttpPost]
+		public async Task<ActionResult<Guid>> CreateUser([FromBody] CreateUser command)
+		{
+			try
+			{
+				var userId = await _mediator.Send(command);
+
+				if (userId == Guid.Empty) 
+				{
+					return BadRequest("An arror occured!");
+				}
+
+				return Ok(userId);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex);
+			}
+		}
+
+		[HttpDelete("{id}")]
+		public async Task<ActionResult> DeleteUser(Guid id)
+		{
+			var command = new DeleteUser(id);
+
+			await _mediator.Send(command);
+
+			return NoContent();
 		}
 	}
 }

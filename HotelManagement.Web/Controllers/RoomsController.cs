@@ -1,4 +1,5 @@
-﻿using HotelManagement.Application.Rooms.Queries;
+﻿using HotelManagement.Application.Rooms.Commands;
+using HotelManagement.Application.Rooms.Queries;
 using HotelManagement.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,5 +30,36 @@ namespace HotelManagement.Web.Controllers
 
 			return Ok(rooms);
 		}
+
+		[HttpPost]
+		public async Task<ActionResult<Guid>> CreateRoom([FromBody] CreateRoom command)
+		{
+			try
+			{
+				var roomId = await _mediator.Send(command);
+
+				if (roomId == Guid.Empty) 
+				{
+					return BadRequest("An arror occured!");
+				}
+
+				return Ok(roomId);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex);
+			}
+		}
+
+		[HttpDelete("{id}")]
+		public async Task<ActionResult> DeleteRoom (Guid id)
+		{
+			var command = new DeleteRoom(id);
+
+			await _mediator.Send(command);
+
+			return NoContent();
+		}
+
 	}
 }

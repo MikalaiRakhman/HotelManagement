@@ -15,10 +15,4 @@
     <ProjectReference Include="..\HotelManagement.Domain\HotelManagement.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Bookings\Commands\" />
-    <Folder Include="Rooms\Commands\" />
-    <Folder Include="Users\Commands\" />
-  </ItemGroup>
-
 </Project>
