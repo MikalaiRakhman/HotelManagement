@@ -1,6 +1,21 @@
-@HotelManagement.Web_HostAddress = http://localhost:5096
+@HotelManagement.Web_HostAddress = http://localhost:5096/api
 
-GET {{HotelManagement.Web_HostAddress}}/weatherforecast/
+### Get all users
+GET {{HotelManagement.Web_HostAddress}}/users
 Accept: application/json
 
 ###
+
+### Create user
+POST {{HotelManagement.Web_HostAddress}}/users
+Content-Type: application/json
+{
+    "firstName": "George",
+    "lastName": "Bush",
+    "email": "american@president.com"
+}
+
+###
+
+### Delete user
+DELETE {{HotelManagement.Web_HostAddress}}/users/80c73c39-d62c-4a0d-9dab-08dcfb66b7ee
