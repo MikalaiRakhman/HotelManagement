@@ -60,5 +60,25 @@ namespace HotelManagement.Web.Controllers
 
 			return NoContent();
 		}
+
+		[HttpPut("{id:guid}")]
+		public async Task<ActionResult> UpdateBooking(Guid id, [FromBody] UpdateBooking command)
+		{
+			if (id != command.Id)
+			{
+				return BadRequest("Booking Id in URL does not match with Id in command");
+			}
+
+			try
+			{
+				await _mediator.Send(command);
+
+				return NoContent();
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
 	}
 }

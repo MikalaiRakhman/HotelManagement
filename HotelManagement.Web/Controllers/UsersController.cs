@@ -51,7 +51,7 @@ namespace HotelManagement.Web.Controllers
 			}
 		}
 
-		[HttpDelete("{id}")]
+		[HttpDelete("{id:guid}")]
 		public async Task<ActionResult> DeleteUser(Guid id)
 		{
 			var command = new DeleteUser(id);
@@ -59,6 +59,25 @@ namespace HotelManagement.Web.Controllers
 			await _mediator.Send(command);
 
 			return NoContent();
+		}
+
+		[HttpPut("{id:guid}")]
+		public async Task<ActionResult> UpdateUser(Guid id, [FromBody] UpdateUser command)
+		{
+			if (id != command.Id)
+			{
+				return BadRequest("User Id in URL does not match with Id in command");
+			}
+
+			try
+			{
+				await _mediator.Send(command);
+				return NoContent();
+			}
+			catch (Exception ex) 
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 	}
 }
