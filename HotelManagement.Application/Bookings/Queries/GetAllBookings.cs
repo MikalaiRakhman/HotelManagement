@@ -27,8 +27,7 @@ namespace HotelManagement.Application.Bookings.Queries
 					RoomId = b.RoomId,
 					StartDate = b.StartDate,
 					EndDate = b.EndDate,
-					TotalPrice = b.TotalPrice
-					
+					TotalPrice = b.TotalPrice					
 				}).ToListAsync(cancellationToken);				
 		}
 	}

@@ -24,29 +24,18 @@ namespace HotelManagement.Application.Bookings.Commands
 
 		public async Task<Guid> Handle(CreateBooking request, CancellationToken cancellationToken)
 		{
-			var userFromRequest = await _context.Users.FindAsync(request.UserId);
-			var roomFromRequest = await _context.Rooms.FindAsync(request.RoomId);
-
-			if (IsCurrentDateInRange(request.StartDate, request.EndDate))
-			{
-				roomFromRequest.IsAvailable = false;
-			}
-
 			var entity = new Booking
 			{
 				UserId = request.UserId,
-				RoomId = roomFromRequest.Id,
+				RoomId = request.RoomId,
 				StartDate = request.StartDate,
 				EndDate = request.EndDate,
 				TotalPrice = request.TotalPrice,
-				User = userFromRequest,
-				Room = roomFromRequest
+				User = await _context.Users.FindAsync(request.UserId),
+				Room = await _context.Rooms.FindAsync(request.RoomId)
 			};
 
 			await _context.Bookings.AddAsync(entity);
-
-			roomFromRequest.Bookings.Add(entity);
-			userFromRequest.Bookings.Add(entity);
 
 			await _context.SaveChangesAsync(cancellationToken);
 

@@ -8,7 +8,6 @@ namespace HotelManagement.Application.Rooms.Queries
 		public int RoomNumber { get; set; }
 		public RoomType RoomType { get; set; }
 		public int PricePerNight { get; set; }
-		public bool IsAvailable { get; set; }
-		public ICollection<Guid> BookingsId { get; set; }
+		public bool IsAvailable { get; set; }		
 	}
 }

@@ -32,7 +32,7 @@ namespace HotelManagement.Application.Users.Commands
 			entity.FirstName = request.FirstName;
 			entity.LastName = request.LastName;
 			entity.Email = request.Email;
-			entity.LastModifiedAt = DateTime.UtcNow;			
+			entity.LastModifiedAt = DateTime.Now;			
 
 			await _context.SaveChangesAsync(cancellationToken);
 		}

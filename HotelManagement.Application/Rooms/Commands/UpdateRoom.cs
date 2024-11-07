@@ -24,7 +24,7 @@ namespace HotelManagement.Application.Rooms.Commands
 
 		public async Task Handle(UpdateRoom request, CancellationToken cancellationToken)
 		{
-			var entity = await _context.Rooms.FindAsync([request.RoomNumber], cancellationToken);
+			var entity = await _context.Rooms.FindAsync([request.Id], cancellationToken);
 
 			if (entity == null)
 			{

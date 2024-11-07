@@ -51,7 +51,7 @@ namespace HotelManagement.Web.Controllers
 			}
 		}
 
-		[HttpDelete("{id}")]
+		[HttpDelete("{id:guid}")]
 		public async Task<ActionResult> DeleteBooking(Guid id)
 		{
 			var command = new DeleteBooking(id);

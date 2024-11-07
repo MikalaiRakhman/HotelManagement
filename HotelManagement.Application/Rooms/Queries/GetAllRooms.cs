@@ -21,33 +21,14 @@ namespace HotelManagement.Application.Rooms.Queries
 
 		public async Task<List<RoomDTO>> Handle(GetAllRooms request, CancellationToken cancellationToken)
 		{
-			var roomsDTO = new List<RoomDTO>();
-			var allRooms = await _context.Rooms.ToListAsync(cancellationToken);
-
-			foreach (var room in allRooms) 
+			return await _context.Rooms.Select(r => new RoomDTO
 			{
-				var bookingsIdFromRoom = new List<Guid>();
-
-				if (room.Bookings != null)
-				{
-					foreach (var booking in room.Bookings) 
-					{ 
-						bookingsIdFromRoom.Add(booking.Id);
-					}
-				}
-
-				roomsDTO.Add(new RoomDTO
-				{
-					Id = room.Id,
-					RoomNumber = room.RoomNumber,
-					RoomType = room.RoomType,
-					PricePerNight = room.PricePerNight,
-					IsAvailable = room.IsAvailable,
-					BookingsId = bookingsIdFromRoom
-				});				
-			}
-
-			return roomsDTO;
+				Id = r.Id,
+				RoomNumber = r.RoomNumber,
+				RoomType = r.RoomType,
+				PricePerNight = r.PricePerNight,
+				IsAvailable = r.IsAvailable,
+			}).ToListAsync(cancellationToken);			
 		}
 	}
 }
