@@ -37,6 +37,8 @@ namespace HotelManagement.Application.Bookings.Commands
 			entity.StartDate = request.StartDate;
 			entity.EndDate = request.EndDate;
 			entity.TotalPrice = request.TotalPrice;
+			entity.User = await _context.Users.FindAsync(request.UserId);
+			entity.Room = await _context.Rooms.FindAsync(request.RoomId);
 
 			await _context.SaveChangesAsync(cancellationToken);
 		}

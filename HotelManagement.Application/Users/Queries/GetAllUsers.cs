@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagement.Application.Users.Queries
 {
-	public record class GetAllUsers : IRequest<List<User>>
+	public record class GetAllUsers : IRequest<List<UserDTO>>
 	{
 	}
 
-	public class GetAllUsersHandler : IRequestHandler<GetAllUsers, List<User>>
+	public class GetAllUsersHandler : IRequestHandler<GetAllUsers, List<UserDTO>>
 	{
 		private readonly IApplicationDbContext _context;
 
@@ -18,16 +18,34 @@ namespace HotelManagement.Application.Users.Queries
 			_context = context;
 		}
 
-		public async Task<List<User>> Handle(GetAllUsers request, CancellationToken cancellationToken)
+		public async Task<List<UserDTO>> Handle(GetAllUsers request, CancellationToken cancellationToken)
 		{
-			return await _context.Users
-				.Select(u => new User
+			var usersDTO = new List<UserDTO>();
+			var allUsers = await _context.Users.ToListAsync(cancellationToken);
+
+			foreach (User user in allUsers)
+			{
+				var bookingsIdFromUser = new List<Guid>();
+
+				if(user.Bookings != null)
 				{
-					Id = u.Id,
-					FirstName = u.FirstName,
-					LastName = u.LastName,
-					Email = u.Email,
-				}).ToListAsync(cancellationToken);
+					foreach (Booking booking in user.Bookings)
+					{
+						bookingsIdFromUser.Add(booking.Id);
+					}
+				}				
+
+				usersDTO.Add(new UserDTO
+				{
+					Id = user.Id,
+					FirstName = user.FirstName,
+					LastName = user.LastName,
+					Email = user.Email,
+					BookingsId = bookingsIdFromUser,
+				});
+			}
+
+			return usersDTO;
 		}
 	}
 }

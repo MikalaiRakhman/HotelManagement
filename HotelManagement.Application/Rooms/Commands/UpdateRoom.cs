@@ -35,6 +35,7 @@ namespace HotelManagement.Application.Rooms.Commands
 			entity.RoomType = request.RoomType;
 			entity.PricePerNight = request.PricePerNight;
 			entity.IsAvailable = request.IsAvailable;
+			entity.LastModifiedAt = DateTime.UtcNow;
 
 			await _context.SaveChangesAsync(cancellationToken);
 		}

@@ -10,7 +10,7 @@ namespace HotelManagement.Infrastructure.Data
 
 		public ApplicationDbContextInitialiser(ApplicationDbContext context)
 		{
-			_context = context;
+			_context = context;			
 		}
 
 		public async Task InitialiseAsync()
@@ -30,7 +30,7 @@ namespace HotelManagement.Infrastructure.Data
 			try
 			{
 				var adminId = Guid.NewGuid();
-				var suitRoomId = Guid.NewGuid();
+				var suitRoomId = Guid.NewGuid();				
 
 				if (!_context.Users.Any()) 
 				{
@@ -41,24 +41,31 @@ namespace HotelManagement.Infrastructure.Data
 								Id = adminId,
 								FirstName = "Mikalai",
 								LastName = "Rakhman",
-								Email = "rakhmanmikalai@gmail.com"
+								Email = "rakhmanmikalai@gmail.com",
+								CreatedAt = DateTime.Now,
+								LastModifiedAt = DateTime.Now,					
 							},
 							new User
 							{
 								FirstName = "Adam",
 								LastName = "Mitskevich",
-								Email = "adammitskevich@bel.com"
+								Email = "adammitskevich@bel.com",
+								CreatedAt = DateTime.Now,
+								LastModifiedAt = DateTime.Now,					
 							},
 							new User
 							{
 								FirstName = "Mike",
 								LastName = "Tyson",
-								Email = "champ@boxing.com"
+								Email = "champ@boxing.com",
+								CreatedAt = DateTime.Now,
+								LastModifiedAt = DateTime.Now,					
 							}
 						);
 
 					await _context.SaveChangesAsync();
 				}
+
 				if (!_context.Rooms.Any())
 				{
 					await _context.Rooms.AddRangeAsync
@@ -69,7 +76,9 @@ namespace HotelManagement.Infrastructure.Data
 								RoomNumber = 1,
 								RoomType = RoomType.Suite,
 								PricePerNight = 1000,
-								IsAvailable = true,
+								IsAvailable = false,
+								CreatedAt = DateTime.Now,
+								LastModifiedAt = DateTime.Now,					
 							},
 							new Room
 							{
@@ -77,6 +86,8 @@ namespace HotelManagement.Infrastructure.Data
 								RoomType = RoomType.Double_Room,
 								PricePerNight = 200,
 								IsAvailable = true,
+								CreatedAt = DateTime.Now,
+								LastModifiedAt = DateTime.Now,					
 							},
 							new Room
 							{
@@ -84,6 +95,8 @@ namespace HotelManagement.Infrastructure.Data
 								RoomType = RoomType.King_Room,
 								PricePerNight = 500,
 								IsAvailable = true,
+								CreatedAt = DateTime.Now,
+								LastModifiedAt = DateTime.Now
 							},
 							new Room
 							{
@@ -91,11 +104,14 @@ namespace HotelManagement.Infrastructure.Data
 								RoomType = RoomType.Single_Room,
 								PricePerNight = 100,
 								IsAvailable = true,
+								CreatedAt = DateTime.Now,
+								LastModifiedAt = DateTime.Now
 							}
 						);
 
 					await _context.SaveChangesAsync();
 				}
+
 				if (!_context.Bookings.Any())
 				{
 					await _context.Bookings.AddAsync
@@ -106,12 +122,12 @@ namespace HotelManagement.Infrastructure.Data
 								RoomId = suitRoomId,
 								StartDate = DateTime.Now,
 								EndDate = DateTime.Now.AddDays(3),
-								TotalPrice = 3000
+								TotalPrice = 3000							
 							}
 						);
 
 					await _context.SaveChangesAsync();
-				}
+				}				
 			}
 			catch (Exception ex)
 			{
