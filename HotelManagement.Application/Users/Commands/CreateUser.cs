@@ -26,10 +26,7 @@ namespace HotelManagement.Application.Users.Commands
 			{
 				FirstName = request.FirstName,
 				LastName = request.LastName,
-				Email = request.Email,
-				CreatedAt = DateTime.UtcNow,
-				LastModifiedAt = DateTime.UtcNow,
-				Bookings = new List<Booking>()
+				Email = request.Email,				
 			};
 
 			_context.Users.Add(entity);

@@ -1,5 +1,7 @@
 using HotelManagement.Application;
+using HotelManagement.Application.Common;
 using HotelManagement.Infrastructure.Data;
+using HotelManagement.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
+builder.Services.AddScoped<IUser, CurrentUser>();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
