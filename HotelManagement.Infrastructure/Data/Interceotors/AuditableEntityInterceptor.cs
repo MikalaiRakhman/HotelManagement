@@ -1,6 +1,6 @@
-﻿using HotelManagement.Application.Common;
-using HotelManagement.Domain.Common;
+﻿using HotelManagement.Domain.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace HotelManagement.Infrastructure.Data.Interceotors
@@ -8,12 +8,10 @@ namespace HotelManagement.Infrastructure.Data.Interceotors
 	public class AuditableEntityInterceptor : SaveChangesInterceptor
 	{
 		private readonly TimeProvider _dateTime;
-		private readonly IUser _user;
 
-		public AuditableEntityInterceptor(TimeProvider dateTime, IUser user)
+		public AuditableEntityInterceptor(TimeProvider dateTime)
 		{
-			_dateTime = dateTime;
-			_user = user;
+			_dateTime = dateTime;			
 		}
 
 		public override InterceptionResult<int> SavingChanges (DbContextEventData eventData, InterceptionResult<int> result)
@@ -39,15 +37,29 @@ namespace HotelManagement.Infrastructure.Data.Interceotors
 
 			foreach (var entry in context.ChangeTracker.Entries<BaseAuditableEntity>())
 			{
-				var utsNow = _dateTime.GetUtcNow();
-
-				if (entry.State == EntityState.Added) 
+				if (entry.State is EntityState.Added or EntityState.Modified || entry.HasChangedOwnedEntities() )
 				{
-					entry.Entity.CreatedAt = utsNow.DateTime;
-				}
+					var utsNow = _dateTime.GetUtcNow();
 
-				entry.Entity.LastModifiedAt = utsNow.DateTime;
-			}
+					if (entry.State == EntityState.Added)
+					{
+						entry.Entity.CreatedAt = utsNow.DateTime;
+					}
+
+					entry.Entity.LastModifiedAt = utsNow.DateTime;
+				}				
+			}			
+		}		
+	}
+
+	public static class Extensions
+	{
+		public static bool HasChangedOwnedEntities(this EntityEntry entry)
+		{
+			return entry.References.Any(r =>
+			r.TargetEntry != null &&
+			r.TargetEntry.Metadata.IsOwned() &&
+			(r.TargetEntry.State == EntityState.Added || r.TargetEntry.State == EntityState.Modified));
 		}
 	}
 }
