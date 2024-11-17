@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using ValidationException = HotelManagement.Application.Common.Exceptions.Validation;
 
 namespace HotelManagement.Application.Common.Behavior
 {
