@@ -34,21 +34,14 @@ namespace HotelManagement.Web.Controllers
 		[HttpPost]
 		public async Task<ActionResult<Guid>> CreateBooking([FromBody] CreateBooking command)
 		{
-			try
-			{
-				var bookingId = await _mediator.Send(command);
+			var bookingId = await _mediator.Send(command);
 
-				if (bookingId == Guid.Empty) 
-				{
-					return BadRequest("An arror occured!");
-				}
-
-				return Ok(bookingId);
-			}
-			catch (Exception ex)
+			if (bookingId == Guid.Empty) 
 			{
-				return BadRequest(ex);
+				return BadRequest("An arror occured!");
 			}
+
+			return Ok(bookingId);			
 		}
 
 		[HttpDelete("{id:guid}")]
@@ -68,17 +61,10 @@ namespace HotelManagement.Web.Controllers
 			{
 				return BadRequest("Booking Id in URL does not match with Id in command");
 			}
+			
+			await _mediator.Send(command);
 
-			try
-			{
-				await _mediator.Send(command);
-
-				return NoContent();
-			}
-			catch (Exception ex)
-			{
-				return BadRequest(ex.Message);
-			}
+			return NoContent();			
 		}
 	}
 }

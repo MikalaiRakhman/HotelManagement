@@ -34,21 +34,14 @@ namespace HotelManagement.Web.Controllers
 		[HttpPost]
 		public async Task<ActionResult<Guid>> CreateRoom([FromBody] CreateRoom command)
 		{
-			try
-			{
-				var roomId = await _mediator.Send(command);
+			var roomId = await _mediator.Send(command);
 
-				if (roomId == Guid.Empty) 
-				{
-					return BadRequest("An arror occured!");
-				}
-
-				return Ok(roomId);
-			}
-			catch (Exception ex)
+			if (roomId == Guid.Empty) 
 			{
-				return BadRequest(ex);
+				return BadRequest("An arror occured!");
 			}
+
+			return Ok(roomId);			
 		}
 
 		[HttpDelete("{id:guid}")]
@@ -69,16 +62,9 @@ namespace HotelManagement.Web.Controllers
 				return BadRequest("Room Id in URL does not match with Id in command");
 			}
 
-			try
-			{
-				await _mediator.Send(command);
+			await _mediator.Send(command);
 
-				return NoContent();
-			}
-			catch (Exception ex) 
-			{
-				return BadRequest(ex.Message);
-			}
+			return NoContent();			
 		}
 	}
 }
