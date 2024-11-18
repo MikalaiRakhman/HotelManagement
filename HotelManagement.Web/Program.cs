@@ -15,8 +15,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
-builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddScoped<IUser, CurrentUser>();
 builder.Services.AddHttpContextAccessor();
 

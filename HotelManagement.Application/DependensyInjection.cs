@@ -16,6 +16,7 @@ namespace HotelManagement.Application
 			{
 				cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
 				cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(Validation<,>));
+				cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptions<,>));
 			});
 
 			return services;
