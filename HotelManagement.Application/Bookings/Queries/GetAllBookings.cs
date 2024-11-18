@@ -1,4 +1,5 @@
-﻿using HotelManagement.Application.Common;
+﻿using HotelManagement.Application.Bookings.Queries.DTOs;
+using HotelManagement.Application.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,8 +24,6 @@ namespace HotelManagement.Application.Bookings.Queries
 				.Select(b => new BookingDTO
 				{
 					Id = b.Id,
-					UserId = b.UserId,
-					RoomId = b.RoomId,
 					StartDate = b.StartDate,
 					EndDate = b.EndDate,
 					TotalPrice = b.TotalPrice					
