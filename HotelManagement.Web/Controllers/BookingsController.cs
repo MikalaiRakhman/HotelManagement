@@ -31,6 +31,20 @@ namespace HotelManagement.Web.Controllers
 			return Ok(bookings);
 		}
 
+		[HttpGet("{bookingId:guid}")]
+		public async Task<ActionResult> GetBookingDetails(Guid bookingId)
+		{
+			var query = new GetBookingDetails(bookingId);
+			var result = await _mediator.Send(query);
+
+			if (result is null) 
+			{
+				return NotFound();
+			}
+
+			return Ok(result);
+		}
+
 		[HttpPost]
 		public async Task<ActionResult<Guid>> CreateBooking([FromBody] CreateBooking command)
 		{

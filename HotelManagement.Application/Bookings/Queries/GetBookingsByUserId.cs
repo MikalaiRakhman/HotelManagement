@@ -30,6 +30,7 @@ namespace HotelManagement.Application.Bookings.Queries
 				.Where(b => b.UserId == request.UserId)
 				.Select(b => new BookingDTO
 				{
+					Id = b.Id,
 					StartDate = b.StartDate,
 					EndDate = b.EndDate,
 					TotalPrice = b.TotalPrice					

@@ -2,7 +2,7 @@
 
 namespace HotelManagement.Application.Bookings.Queries.DTOs
 {
-	public class BookingDetailsDTO : BaseEntity
+	public class BookingDetailsDTO
 	{
 		public DateTime StartDate { get; set; }
 		public DateTime EndDate { get; set; }

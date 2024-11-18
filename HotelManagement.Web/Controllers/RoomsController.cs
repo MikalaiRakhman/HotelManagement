@@ -1,4 +1,5 @@
-﻿using HotelManagement.Application.Rooms.Commands;
+﻿using HotelManagement.Application.Bookings.Queries;
+using HotelManagement.Application.Rooms.Commands;
 using HotelManagement.Application.Rooms.Queries;
 using HotelManagement.Domain.Entities;
 using MediatR;
@@ -29,6 +30,20 @@ namespace HotelManagement.Web.Controllers
 			}
 
 			return Ok(rooms);
+		}
+
+		[HttpGet("{roomId}/bookings")]
+		public async Task<ActionResult> GetBookingsByRoomId(Guid roomId)
+		{
+			var query = new GetBookingsByRoomId(roomId);
+			var resylt = await _mediator.Send(query);
+
+			if (resylt is null or [])
+			{
+				return NotFound();
+			}
+
+			return Ok(resylt);
 		}
 
 		[HttpPost]
