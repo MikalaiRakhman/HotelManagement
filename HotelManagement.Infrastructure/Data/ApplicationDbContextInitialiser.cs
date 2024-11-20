@@ -42,24 +42,24 @@ namespace HotelManagement.Infrastructure.Data
 								FirstName = "Mikalai",
 								LastName = "Rakhman",
 								Email = "rakhmanmikalai@gmail.com",
-								CreatedAt = DateTime.Now,
-								LastModifiedAt = DateTime.Now,					
+								CreatedAt = new(2020, 10, 08),
+								LastModifiedAt = new(2020, 10, 08),					
 							},
 							new User
 							{
 								FirstName = "Adam",
 								LastName = "Mitskevich",
 								Email = "adammitskevich@bel.com",
-								CreatedAt = DateTime.Now,
-								LastModifiedAt = DateTime.Now,					
+								CreatedAt = new(2020, 10, 08),
+								LastModifiedAt = new(2020, 10, 08),
 							},
 							new User
 							{
 								FirstName = "Mike",
 								LastName = "Tyson",
 								Email = "champ@boxing.com",
-								CreatedAt = DateTime.Now,
-								LastModifiedAt = DateTime.Now,					
+								CreatedAt = new(2020, 10, 08),
+								LastModifiedAt = new(2020, 10, 08),
 							}
 						);
 
@@ -120,8 +120,8 @@ namespace HotelManagement.Infrastructure.Data
 							{
 								UserId = adminId,
 								RoomId = suitRoomId,
-								StartDate = DateTime.Now,
-								EndDate = DateTime.Now.AddDays(3),
+								StartDate = new(2020, 10, 08),
+								EndDate = new(2020, 11, 08),
 								TotalPrice = 3000							
 							}
 						);
