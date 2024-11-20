@@ -1,6 +1,4 @@
 ﻿using HotelManagement.Application.Common;
-using HotelManagement.Application.Users.Queries;
-using HotelManagement.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

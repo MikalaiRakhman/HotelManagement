@@ -31,12 +31,6 @@ namespace HotelManagement.Application.Rooms.Validators
 				.WithMessage("PricePerNight is required!")
 				.GreaterThan(0)
 				.WithMessage("PricePerNight must be greater than 0");
-
-			RuleFor(r => r.IsAvailable)
-				.NotEmpty()
-				.WithMessage("IsAvailable is requared!")
-				.NotNull()
-				.WithMessage("IsAvailable must be true or false");
 		}
 		
 		private async Task<bool> BeUniqueRoomNumber(int  roomNumber, CancellationToken cancellationToken)

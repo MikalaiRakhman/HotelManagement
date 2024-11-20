@@ -20,10 +20,6 @@ namespace HotelManagement.Application.Bookings.Validators
 				.WithMessage("Start date must be earlier than end date.")
 				.NotEmpty()
 				.WithMessage("Start date is required.");
-
-			RuleFor(b => b.TotalPrice)
-				.NotEmpty()
-				.WithMessage("TotalPrice is required");
 		}
 	}
 }

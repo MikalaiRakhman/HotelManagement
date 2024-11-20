@@ -6,12 +6,11 @@ namespace HotelManagement.Application.Bookings.Commands
 	public record UpdateBooking : IRequest
 	{
 		public Guid Id { get; init; }
-		public Guid UserId { get; set; }
-		public Guid RoomId { get; set; }
+		public Guid UserId { get; init; }
+		public Guid RoomId { get; init; }
 
-		public DateOnly StartDate { get; set; }
-		public DateOnly EndDate { get; set; }
-		public int TotalPrice { get; set; }
+		public DateOnly StartDate { get; init; }
+		public DateOnly EndDate { get; init; }		
 	}
 
 	public class UpdateBookingHandler : IRequestHandler<UpdateBooking>
@@ -36,11 +35,19 @@ namespace HotelManagement.Application.Bookings.Commands
 			entity.RoomId = request.RoomId;
 			entity.StartDate = request.StartDate;
 			entity.EndDate = request.EndDate;
-			entity.TotalPrice = request.TotalPrice;
+			entity.TotalPrice = await CalculateTheCostOfBooking(request.StartDate, request.EndDate, request.RoomId);
 			entity.User = await _context.Users.FindAsync(request.UserId);
 			entity.Room = await _context.Rooms.FindAsync(request.RoomId);
 
 			await _context.SaveChangesAsync(cancellationToken);
+		}
+
+		private async Task<int> CalculateTheCostOfBooking(DateOnly startDay, DateOnly endDay, Guid roomId)
+		{
+			var differenceInDays = endDay.DayNumber - startDay.DayNumber;
+			var pricePerNight = (await _context.Rooms.FindAsync(roomId)).PricePerNight;
+
+			return differenceInDays * pricePerNight;
 		}
 	}
 }

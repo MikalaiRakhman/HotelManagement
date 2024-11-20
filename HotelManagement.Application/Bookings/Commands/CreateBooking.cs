@@ -1,6 +1,7 @@
 ﻿using HotelManagement.Application.Common;
 using HotelManagement.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagement.Application.Bookings.Commands
 {
@@ -9,8 +10,7 @@ namespace HotelManagement.Application.Bookings.Commands
 		public Guid UserId { get; set; }
 		public Guid RoomId { get; set; }
 		public DateOnly StartDate { get; set; }
-		public DateOnly EndDate { get; set; }
-		public int TotalPrice { get; set; }
+		public DateOnly EndDate { get; set; }		
 	}
 
 	public class CreateBookingHandler : IRequestHandler<CreateBooking, Guid>
@@ -30,7 +30,7 @@ namespace HotelManagement.Application.Bookings.Commands
 				RoomId = request.RoomId,
 				StartDate = request.StartDate,
 				EndDate = request.EndDate,
-				TotalPrice = request.TotalPrice,
+				TotalPrice = await CalculateTheCostOfBooking(request.StartDate, request.EndDate, request.RoomId),
 				User = await _context.Users.FindAsync(request.UserId),
 				Room = await _context.Rooms.FindAsync(request.RoomId)
 			};
@@ -42,10 +42,12 @@ namespace HotelManagement.Application.Bookings.Commands
 			return entity.UserId;
 		}
 
-		private bool IsCurrentDateInRange(DateTime startDate, DateTime endDate) 
+		private async Task<int> CalculateTheCostOfBooking(DateOnly startDay, DateOnly endDay, Guid roomId)
 		{
-			DateTime now = DateTime.Now; 
-			return now >= startDate && now <= endDate; 
+			var differenceInDays = endDay.DayNumber - startDay.DayNumber;
+			var pricePerNight = (await _context.Rooms.FindAsync(roomId)).PricePerNight;
+
+			return differenceInDays * pricePerNight;
 		}
 	}
 }

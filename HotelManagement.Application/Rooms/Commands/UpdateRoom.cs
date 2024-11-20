@@ -10,7 +10,6 @@ namespace HotelManagement.Application.Rooms.Commands
 		public int RoomNumber { get; init; }
 		public RoomType RoomType { get; init; }
 		public int PricePerNight { get; init; }
-		public bool IsAvailable { get; init; }
 	}
 
 	public class UpdateRoomHandler : IRequestHandler<UpdateRoom>
@@ -34,7 +33,7 @@ namespace HotelManagement.Application.Rooms.Commands
 			entity.RoomNumber = request.RoomNumber;
 			entity.RoomType = request.RoomType;
 			entity.PricePerNight = request.PricePerNight;
-			entity.IsAvailable = request.IsAvailable;			
+			entity.IsAvailable = true;			
 
 			await _context.SaveChangesAsync(cancellationToken);
 		}

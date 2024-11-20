@@ -10,7 +10,6 @@ namespace HotelManagement.Application.Rooms.Commands
 		public int RoomNumber { get; set; }
 		public RoomType RoomType { get; set; }
 		public int PricePerNight { get; set; }
-		public bool IsAvailable { get; set; }
 	}
 
 	public class CreateRoomHandler : IRequestHandler<CreateRoom, Guid>
@@ -29,7 +28,7 @@ namespace HotelManagement.Application.Rooms.Commands
 				RoomNumber = request.RoomNumber,
 				RoomType = request.RoomType,
 				PricePerNight = request.PricePerNight,
-				IsAvailable = request.IsAvailable,				
+				IsAvailable = true,				
 			};
 
 			_context.Rooms.Add(entity);
