@@ -63,9 +63,16 @@ namespace HotelManagement.Web.Controllers
 		{
 			var command = new DeleteBooking(id);
 
-			await _mediator.Send(command);
+			try
+			{
+				await _mediator.Send(command);
 
-			return NoContent();
+				return NoContent();
+			}
+			catch (Exception ex) 
+			{
+				return NotFound(ex.Message);
+			}
 		}
 
 		[HttpPut("{id:guid}")]

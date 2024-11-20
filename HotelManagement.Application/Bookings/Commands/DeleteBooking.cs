@@ -17,6 +17,11 @@ namespace HotelManagement.Application.Bookings.Commands
 		{
 			var entity = await _context.Bookings.FindAsync([request.Id], cancellationToken);
 
+			if (entity == null) 
+			{
+				throw new Exception($"Entity with Id = {request.Id} was not found.");
+			}
+
 			_context.Bookings.Remove(entity);
 
 			await _context.SaveChangesAsync(cancellationToken);
