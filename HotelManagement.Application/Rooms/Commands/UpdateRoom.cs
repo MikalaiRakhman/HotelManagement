@@ -1,4 +1,5 @@
 ﻿using HotelManagement.Application.Common;
+using HotelManagement.Domain.Entities;
 using HotelManagement.Domain.Entities.Enums;
 using MediatR;
 
@@ -23,7 +24,7 @@ namespace HotelManagement.Application.Rooms.Commands
 
 		public async Task Handle(UpdateRoom request, CancellationToken cancellationToken)
 		{
-			var entity = await _context.Rooms.FindAsync([request.Id], cancellationToken);
+			var entity = await _context.Rooms.FindAsync(request.Id, cancellationToken);
 
 			if (entity == null)
 			{
@@ -33,9 +34,33 @@ namespace HotelManagement.Application.Rooms.Commands
 			entity.RoomNumber = request.RoomNumber;
 			entity.RoomType = request.RoomType;
 			entity.PricePerNight = request.PricePerNight;
-			entity.IsAvailable = true;			
+			entity.IsAvailable = IsThisRoomAvailibleNow(entity);
+			entity.LastModifiedAt = DateTime.Now;
 
 			await _context.SaveChangesAsync(cancellationToken);
+		}
+
+		private bool IsCurrentDateInRange(DateOnly startDate, DateOnly endDate) 
+		{ 
+			DateOnly now = DateOnly.FromDateTime(DateTime.Now);
+
+			return now >= startDate && now <= endDate; 
+		}
+
+		private bool IsThisRoomAvailibleNow(Room room)
+		{
+			if (room.Bookings.Any()) 
+			{
+				foreach (var booking in room.Bookings)
+				{
+					if(IsCurrentDateInRange(booking.StartDate, booking.EndDate))
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
 		}
 	}
 }

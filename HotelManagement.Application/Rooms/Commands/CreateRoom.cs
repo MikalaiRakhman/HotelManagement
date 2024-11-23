@@ -28,7 +28,9 @@ namespace HotelManagement.Application.Rooms.Commands
 				RoomNumber = request.RoomNumber,
 				RoomType = request.RoomType,
 				PricePerNight = request.PricePerNight,
-				IsAvailable = true,				
+				IsAvailable = true,
+				CreatedAt = DateTime.Now,
+				LastModifiedAt = DateTime.Now
 			};
 
 			_context.Rooms.Add(entity);
