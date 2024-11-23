@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using HotelManagement.Application.Bookings.Commands;
+using HotelManagement.Application.Common;
 
 namespace HotelManagement.Application.Bookings.Validators
 {

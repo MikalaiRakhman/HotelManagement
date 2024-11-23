@@ -1,8 +1,10 @@
 ﻿using HotelManagement.Application.Bookings.Commands;
 using HotelManagement.Application.Bookings.Queries;
+using HotelManagement.Application.Common;
 using HotelManagement.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagement.Web.Controllers
 {
@@ -11,10 +13,10 @@ namespace HotelManagement.Web.Controllers
 	public class BookingsController : Controller
 	{
 		private readonly IMediator _mediator;
-
+		
 		public BookingsController(IMediator mediator)
 		{
-			_mediator = mediator;
+			_mediator = mediator;			
 		}
 
 		[HttpGet]
@@ -86,6 +88,6 @@ namespace HotelManagement.Web.Controllers
 			await _mediator.Send(command);
 
 			return NoContent();			
-		}
+		}		
 	}
 }
