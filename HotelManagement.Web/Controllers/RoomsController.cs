@@ -18,6 +18,11 @@ namespace HotelManagement.Web.Controllers
 			_mediator = mediator;
 		}
 
+		/// <summary>
+		/// Get all rooms.
+		/// </summary>
+		/// <returns>All rooms.</returns>
+		/// <responce code="200">Return list of rooms</responce>		
 		[HttpGet]
 		public async Task<ActionResult<List<Room>>> GetAllRooms()
 		{
@@ -32,6 +37,13 @@ namespace HotelManagement.Web.Controllers
 			return Ok(rooms);
 		}
 
+		/// <summary>
+		/// Get bookings by room id.
+		/// </summary>
+		/// <param name="roomId">Room Id.</param>
+		/// <returns>List of bookings.</returns>
+		/// <responce code="200">Return list of booking.</responce>
+		/// <responce code="404">Not found.</responce>
 		[HttpGet("{roomId}/bookings")]
 		public async Task<ActionResult> GetBookingsByRoomId(Guid roomId)
 		{
@@ -46,6 +58,14 @@ namespace HotelManagement.Web.Controllers
 			return Ok(resylt);
 		}
 
+
+		/// <summary>
+		/// Create new room.
+		/// </summary>
+		/// <param name="command">The command containing room data</param>
+		/// <returns>Room id</returns>
+		/// <responce code="200">Create new room.</responce>
+		/// <responce code="400">One or more errors have occured.</responce>
 		[HttpPost]
 		public async Task<ActionResult<Guid>> CreateRoom([FromBody] CreateRoom command)
 		{
@@ -59,16 +79,40 @@ namespace HotelManagement.Web.Controllers
 			return Ok(roomId);			
 		}
 
+
+		/// <summary>
+		/// Remove room
+		/// </summary>
+		/// <param name="id">Room id.</param>
+		/// <returns>No content.</returns>
+		/// <responce code="200">No content.</responce>
+		/// <responce code="400">Room with id was not found.</responce>
 		[HttpDelete("{id:guid}")]
 		public async Task<ActionResult> DeleteRoom (Guid id)
 		{
-			var command = new DeleteRoom(id);
+			try
+			{
+				var command = new DeleteRoom(id);
 
-			await _mediator.Send(command);
+				await _mediator.Send(command);
 
-			return NoContent();
+				return NoContent();
+			}
+			catch (Exception ex) 
+			{
+				return BadRequest(ex.Message);	
+			}			
 		}
 
+
+		/// <summary>
+		/// Update room.
+		/// </summary>
+		/// <param name="id">Room id.</param>
+		/// <param name="command">The command containing new room data.</param>
+		/// <returns></returns>
+		/// <responce code="400">One or more errors have occured.</responce>
+		/// <responce code="204">Room udated.</responce>
 		[HttpPut("{id:guid}")]
 		public async Task<ActionResult> UpdateRoom(Guid id, [FromBody] UpdateRoom command)
 		{

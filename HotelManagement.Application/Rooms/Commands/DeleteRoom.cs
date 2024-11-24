@@ -16,9 +16,16 @@ namespace HotelManagement.Application.Rooms.Commands
 
 		public async Task Handle(DeleteRoom request, CancellationToken cancellationToken)
 		{
-			var entity = await _context.Rooms.FindAsync([request.Id], cancellationToken);
+			try
+			{
+				var entity = await _context.Rooms.FindAsync([request.Id], cancellationToken);
 
-			_context.Rooms.Remove(entity);
+				_context.Rooms.Remove(entity);
+			}
+			catch (Exception ex) 
+			{
+				throw new Exception($"Room with id = {request.Id} was not found.");
+			}		
 
 			await _context.SaveChangesAsync(cancellationToken);
 		}
