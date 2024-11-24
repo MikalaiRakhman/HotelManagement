@@ -1,6 +1,7 @@
 ﻿using HotelManagement.Application.Common;
 using HotelManagement.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagement.Application.Bookings.Commands
 {
@@ -23,7 +24,7 @@ namespace HotelManagement.Application.Bookings.Commands
 
 		public async Task<Guid> Handle(CreateBooking request, CancellationToken cancellationToken)
 		{
-			if(await CheckRoomAvailibilityAsync(request.RoomId, request.StartDate, request.EndDate))
+			if (await CheckRoomAvailibilityAsync(request.RoomId ,request.StartDate, request.EndDate))
 			{
 				var entity = new Booking
 				{
@@ -36,12 +37,7 @@ namespace HotelManagement.Application.Bookings.Commands
 					Room = await _context.Rooms.FindAsync(request.RoomId)
 				};
 
-				await _context.Bookings.AddAsync(entity);
-
-				await _context.SaveChangesAsync(cancellationToken);
-
-				await AddBookingToRoomAsync(entity.RoomId, entity);
-				await AddBookingToUserAsync(entity.UserId, entity);
+				await _context.Bookings.AddAsync(entity);				
 
 				await _context.SaveChangesAsync(cancellationToken);
 
@@ -53,20 +49,6 @@ namespace HotelManagement.Application.Bookings.Commands
 			}			
 		}
 
-		private async Task AddBookingToRoomAsync(Guid roomId, Booking booking)
-		{
-			var room = await _context.Rooms.FindAsync(roomId);
-
-			room.Bookings.Add(booking);
-		}
-
-		private async Task AddBookingToUserAsync(Guid userId, Booking booking)
-		{
-			var user = await _context.Users.FindAsync(userId);
-
-			user.Bookings.Add(booking);
-		}
-
 		private async Task<int> CalculateTheCostOfBooking(DateOnly startDay, DateOnly endDay, Guid roomId)
 		{
 			var differenceInDays = endDay.DayNumber - startDay.DayNumber;
@@ -75,20 +57,20 @@ namespace HotelManagement.Application.Bookings.Commands
 			return differenceInDays * pricePerNight;
 		}		
 
-		private async Task<bool> CheckRoomAvailibilityAsync(Guid roomId, DateOnly startDate, DateOnly endDay)
+		private async Task<bool> CheckRoomAvailibilityAsync(Guid roomId, DateOnly startDate, DateOnly endDate)
 		{
-			var room = await _context.Rooms.FindAsync(roomId);
+			var allBookings = await _context.Bookings.ToListAsync();
 
-			if (room.Bookings == null || !room.Bookings.Any())
-			{ 
-				return true; 
-			}
+			var bookingsWhereRoomId = allBookings.Where(b => b.RoomId == roomId).ToList();
 
-			foreach (var booking in room.Bookings)
+			if (bookingsWhereRoomId.Count > 0) 
 			{
-				if(DoDateRangesOverlap(booking.StartDate, booking.EndDate, startDate, endDay))
+				foreach (var booking in bookingsWhereRoomId)
 				{
-					return false;
+					if(DoDateRangesOverlap(booking.StartDate, booking.EndDate, startDate, endDate))
+					{
+						return false;
+					}
 				}
 			}
 

@@ -1,5 +1,4 @@
 ﻿using HotelManagement.Application.Common;
-using HotelManagement.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +19,7 @@ namespace HotelManagement.Application.Rooms.Queries
 
 		public async Task<List<RoomDTO>> Handle(GetAllRooms request, CancellationToken cancellationToken)
 		{
-			await UpdateRoomsAvailabilityForNow(cancellationToken);
+			await UpdateRoomsAvailabilityForNowAsync(cancellationToken);
 
 			return await _context.Rooms.Select(r => new RoomDTO
 			{
@@ -32,29 +31,6 @@ namespace HotelManagement.Application.Rooms.Queries
 			}).ToListAsync(cancellationToken);			
 		}
 
-		private bool IsThisRoomAvailibleNow(Room room)
-		{
-			var count = 0;
-
-			if (room.Bookings != null)
-			{
-				foreach (var booking in room.Bookings)
-				{
-					if (IsCurrentDateInRange(booking.StartDate, booking.EndDate))
-					{
-						count++;
-					}
-				}
-
-				if (count > 0)
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-
 		private bool IsCurrentDateInRange(DateOnly startDate, DateOnly endDate)
 		{
 			DateOnly now = DateOnly.FromDateTime(DateTime.Now);
@@ -62,7 +38,7 @@ namespace HotelManagement.Application.Rooms.Queries
 			return now >= startDate && now <= endDate;
 		}
 
-		private async Task UpdateRoomsAvailabilityForNow(CancellationToken cancellationToken)
+		private async Task UpdateRoomsAvailabilityForNowAsync(CancellationToken cancellationToken)
 		{
 			var rooms = await _context.Rooms.ToListAsync(cancellationToken);
 
