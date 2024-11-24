@@ -13,7 +13,7 @@ namespace HotelManagement.Application.Bookings.Queries
 		{
 			RoomId = roomId;
 		}
-	}	
+	}
 	
 	public class GetBookingsByRoomIdHandler : IRequestHandler<GetBookingsByRoomId, List<BookingDTO>>
 	{

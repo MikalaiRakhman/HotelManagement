@@ -51,10 +51,18 @@ namespace HotelManagement.Application.Bookings.Commands
 
 		private async Task<int> CalculateTheCostOfBooking(DateOnly startDay, DateOnly endDay, Guid roomId)
 		{
-			var differenceInDays = endDay.DayNumber - startDay.DayNumber;
-			var pricePerNight = (await _context.Rooms.FindAsync(roomId)).PricePerNight;
+			try
+			{
+				var differenceInDays = endDay.DayNumber - startDay.DayNumber;
 
-			return differenceInDays * pricePerNight;
+				var pricePerNight = (await _context.Rooms.FindAsync(roomId)).PricePerNight;
+
+				return differenceInDays * pricePerNight;
+			}
+			catch(NullReferenceException ex)
+			{
+				throw new Exception($"Room with Id == {roomId} is not found.");
+			}					
 		}		
 
 		private async Task<bool> CheckRoomAvailibilityAsync(Guid roomId, DateOnly startDate, DateOnly endDate)

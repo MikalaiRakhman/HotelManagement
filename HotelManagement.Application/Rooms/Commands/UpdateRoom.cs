@@ -1,5 +1,4 @@
 ﻿using HotelManagement.Application.Common;
-using HotelManagement.Domain.Entities;
 using HotelManagement.Domain.Entities.Enums;
 using MediatR;
 

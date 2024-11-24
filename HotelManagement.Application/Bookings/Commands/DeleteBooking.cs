@@ -13,6 +13,7 @@ namespace HotelManagement.Application.Bookings.Commands
 		{
 			_context = context;
 		}
+
 		public async Task Handle(DeleteBooking request, CancellationToken cancellationToken)
 		{
 			var entity = await _context.Bookings.FindAsync([request.Id], cancellationToken);

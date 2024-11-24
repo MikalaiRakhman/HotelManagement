@@ -18,6 +18,7 @@ namespace HotelManagement.Application.Bookings.Queries
 	public class GetBookingDetailsHandler : IRequestHandler<GetBookingDetails, BookingDetailsDTO> 
 	{
 		private readonly IApplicationDbContext _context;
+
 		public GetBookingDetailsHandler(IApplicationDbContext context)
 		{
 			_context = context;

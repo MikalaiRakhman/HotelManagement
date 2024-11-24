@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using HotelManagement.Application.Bookings.Commands;
-using HotelManagement.Application.Common;
 
 namespace HotelManagement.Application.Bookings.Validators
 {
@@ -10,11 +9,15 @@ namespace HotelManagement.Application.Bookings.Validators
 		{
 			RuleFor(b => b.UserId)
 				.NotEmpty()
-				.WithMessage("UserId is requared");
+				.WithMessage("UserId is required")
+				.Must(IsValidGuid)
+				.WithMessage("UserId must be a valid GUID");
 
 			RuleFor(b => b.RoomId)
 				.NotEmpty()
-				.WithMessage("RoomId is required!");
+				.WithMessage("RoomId is required!")
+				.Must(IsValidGuid)
+				.WithMessage("RoomId must be a valid GUID");
 
 			RuleFor(b => b.StartDate)
 				.LessThan(b => b.EndDate)
@@ -22,5 +25,11 @@ namespace HotelManagement.Application.Bookings.Validators
 				.NotEmpty()
 				.WithMessage("Start date is required.");
 		}
+
+		private bool IsValidGuid(Guid guid)
+		{
+			return guid != Guid.Empty;
+		}
 	}
 }
+

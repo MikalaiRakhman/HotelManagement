@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace HotelManagement.Infrastructure.Data
 {
@@ -12,6 +11,7 @@ namespace HotelManagement.Infrastructure.Data
 			var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
 
 			await initialiser.InitialiseAsync();
+
 			await initialiser.SeedAsync();
 		}
 	}

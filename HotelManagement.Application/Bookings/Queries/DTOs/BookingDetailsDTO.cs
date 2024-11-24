@@ -1,6 +1,4 @@
-﻿using HotelManagement.Domain.Common;
-
-namespace HotelManagement.Application.Bookings.Queries.DTOs
+﻿namespace HotelManagement.Application.Bookings.Queries.DTOs
 {
 	public class BookingDetailsDTO
 	{

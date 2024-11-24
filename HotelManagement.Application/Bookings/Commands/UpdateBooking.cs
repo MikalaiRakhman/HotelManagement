@@ -1,5 +1,4 @@
 ﻿using HotelManagement.Application.Common;
-using HotelManagement.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +9,6 @@ namespace HotelManagement.Application.Bookings.Commands
 		public Guid Id { get; init; }
 		public Guid UserId { get; init; }
 		public Guid RoomId { get; init; }
-
 		public DateOnly StartDate { get; init; }
 		public DateOnly EndDate { get; init; }		
 	}
@@ -35,12 +33,26 @@ namespace HotelManagement.Application.Bookings.Commands
 					throw new Exception($"Entity with Id = {request.Id} was not found!");
 				}
 
-				entity.UserId = request.UserId;
-				entity.RoomId = request.RoomId;
-				entity.StartDate = request.StartDate;
-				entity.EndDate = request.EndDate;
-				entity.TotalPrice = await CalculateTheCostOfBooking(request.StartDate, request.EndDate, request.RoomId);
-				entity.User = await _context.Users.FindAsync(request.UserId);
+				try
+				{
+					entity.UserId = request.UserId;
+					entity.RoomId = request.RoomId;
+					entity.StartDate = request.StartDate;
+					entity.EndDate = request.EndDate;
+					entity.TotalPrice = await CalculateTheCostOfBooking(request.StartDate, request.EndDate, request.RoomId);
+				}
+				catch (NullReferenceException ex)
+				{
+					throw new Exception($"The room with id = {request.RoomId} was not found.");
+				}
+				try
+				{
+					entity.User = await _context.Users.FindAsync(request.UserId);
+				}
+				catch (NullReferenceException ex) 
+				{
+					throw new Exception($"The user with id = {request.UserId} was not found.");
+				}
 				entity.Room = await _context.Rooms.FindAsync(request.RoomId);
 
 				await _context.SaveChangesAsync(cancellationToken);				
@@ -54,6 +66,7 @@ namespace HotelManagement.Application.Bookings.Commands
 		private async Task<int> CalculateTheCostOfBooking(DateOnly startDay, DateOnly endDay, Guid roomId)
 		{
 			var differenceInDays = endDay.DayNumber - startDay.DayNumber;
+
 			var pricePerNight = (await _context.Rooms.FindAsync(roomId)).PricePerNight;
 
 			return differenceInDays * pricePerNight;
@@ -61,9 +74,9 @@ namespace HotelManagement.Application.Bookings.Commands
 
 		private async Task<bool> CheckRoomAvailibilityAsync(Guid roomId, DateOnly startDate, DateOnly endDate)
 		{
-			var allBookings = await _context.Bookings.ToListAsync();
 
-			var bookingsWhereRoomId = allBookings.Where(b => b.RoomId == roomId).ToList();
+			var bookingsWhereRoomId = await _context.Bookings
+				.Where(b => b.RoomId == roomId).ToListAsync();
 
 			if (bookingsWhereRoomId.Count > 0)
 			{
