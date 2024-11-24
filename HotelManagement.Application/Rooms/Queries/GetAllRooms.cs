@@ -34,14 +34,21 @@ namespace HotelManagement.Application.Rooms.Queries
 
 		private bool IsThisRoomAvailibleNow(Room room)
 		{
-			if (room.Bookings.Any())
+			var count = 0;
+
+			if (room.Bookings != null)
 			{
 				foreach (var booking in room.Bookings)
 				{
 					if (IsCurrentDateInRange(booking.StartDate, booking.EndDate))
 					{
-						return false;
+						count++;
 					}
+				}
+
+				if (count > 0)
+				{
+					return false;
 				}
 			}
 
@@ -61,7 +68,23 @@ namespace HotelManagement.Application.Rooms.Queries
 
 			foreach (var room in rooms)
 			{
-				room.IsAvailable = IsThisRoomAvailibleNow(room);
+				if (room.Bookings != null) 
+				{
+					if(room.Bookings.Count > 0)
+					{
+						foreach (var booking in room.Bookings)
+						{
+							if(IsCurrentDateInRange(booking.StartDate, booking.EndDate))
+							{
+								room.IsAvailable = false;
+							}
+							else
+							{
+								room.IsAvailable = true;
+							}
+						}
+					}
+				}
 			}
 
 			await _context.SaveChangesAsync();

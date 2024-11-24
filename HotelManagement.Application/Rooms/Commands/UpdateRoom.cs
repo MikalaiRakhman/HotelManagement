@@ -34,33 +34,10 @@ namespace HotelManagement.Application.Rooms.Commands
 			entity.RoomNumber = request.RoomNumber;
 			entity.RoomType = request.RoomType;
 			entity.PricePerNight = request.PricePerNight;
-			entity.IsAvailable = IsThisRoomAvailibleNow(entity);
+			entity.IsAvailable = true;
 			entity.LastModifiedAt = DateTime.Now;
 
 			await _context.SaveChangesAsync(cancellationToken);
-		}
-
-		private bool IsCurrentDateInRange(DateOnly startDate, DateOnly endDate) 
-		{ 
-			DateOnly now = DateOnly.FromDateTime(DateTime.Now);
-
-			return now >= startDate && now <= endDate; 
-		}
-
-		private bool IsThisRoomAvailibleNow(Room room)
-		{
-			if (room.Bookings.Any()) 
-			{
-				foreach (var booking in room.Bookings)
-				{
-					if(IsCurrentDateInRange(booking.StartDate, booking.EndDate))
-					{
-						return false;
-					}
-				}
-			}
-
-			return true;
 		}
 	}
 }

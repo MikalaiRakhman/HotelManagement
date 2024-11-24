@@ -1,10 +1,8 @@
 ﻿using HotelManagement.Application.Bookings.Commands;
 using HotelManagement.Application.Bookings.Queries;
-using HotelManagement.Application.Common;
 using HotelManagement.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagement.Web.Controllers
 {
@@ -47,7 +45,15 @@ namespace HotelManagement.Web.Controllers
 			return Ok(result);
 		}
 
+
+		/// <summary>
+		/// Creates new booking.
+		/// </summary>
+		/// <param name="command">The booking details.</param>
+		/// <returns>The ID of the newly created booking.</returns>		
 		[HttpPost]
+		[ProducesResponseType(typeof(Guid), 201)]
+		[ProducesResponseType(400)]		
 		public async Task<ActionResult<Guid>> CreateBooking([FromBody] CreateBooking command)
 		{
 			var bookingId = await _mediator.Send(command);
