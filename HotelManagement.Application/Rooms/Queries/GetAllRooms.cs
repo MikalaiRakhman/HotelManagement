@@ -40,30 +40,19 @@ namespace HotelManagement.Application.Rooms.Queries
 
 		private async Task UpdateRoomsAvailabilityForNowAsync(CancellationToken cancellationToken)
 		{
-			var rooms = await _context.Rooms.ToListAsync(cancellationToken);
+			var bookings = await _context.Bookings.ToListAsync(cancellationToken);
 
-			foreach (var room in rooms)
+			foreach (var booking in bookings)
 			{
-				if (room.Bookings != null) 
+				if(IsCurrentDateInRange(booking.StartDate, booking.EndDate))
 				{
-					if(room.Bookings.Count > 0)
-					{
-						foreach (var booking in room.Bookings)
-						{
-							if(IsCurrentDateInRange(booking.StartDate, booking.EndDate))
-							{
-								room.IsAvailable = false;
-							}
-							else
-							{
-								room.IsAvailable = true;
-							}
-						}
-					}
+					var room = await _context.Rooms.FindAsync(booking.RoomId, cancellationToken);
+
+					room.IsAvailable = false;
 				}
 			}
 
-			await _context.SaveChangesAsync();
+			_context.SaveChangesAsync(cancellationToken);
 		}
 	}
 }
