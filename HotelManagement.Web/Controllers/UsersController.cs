@@ -18,6 +18,11 @@ namespace HotelManagement.Web.Controllers
 			_mediator = mediator;
 		}
 
+		/// <summary>
+		/// Get all users.
+		/// </summary>
+		/// <returns>List of users.</returns>
+		/// <responce code="200">Return list of users.</responce>
 		[HttpGet]
 		public async Task<ActionResult<List<User>>> GerAllUsers()
 		{
@@ -32,6 +37,13 @@ namespace HotelManagement.Web.Controllers
 			return Ok(users);
 		}
 
+		/// <summary>
+		/// Get all bookings of specific user.
+		/// </summary>
+		/// <param name="userId">User id/</param>
+		/// <returns>Get bookings of specific user/</returns>
+		/// <responce code="404">Not found/</responce>
+		/// <responce code="200">Bookings list/</responce>
 		[HttpGet("{userId}/bookings")]
 		public async Task<ActionResult> GetBookingsByUserId(Guid userId)
 		{
@@ -46,6 +58,13 @@ namespace HotelManagement.Web.Controllers
 			return Ok(result);
 		}
 
+		/// <summary>
+		/// Create new user.
+		/// </summary>
+		/// <param name="command">User details.</param>
+		/// <returns>User id.</returns>
+		/// <responce code="200">Return user id.</responce>
+		/// <responce code="400">One or more errors have occured.</responce>
 		[HttpPost]
 		public async Task<ActionResult<Guid>> CreateUser([FromBody] CreateUser command)
 		{			
@@ -59,16 +78,39 @@ namespace HotelManagement.Web.Controllers
 			return Ok(userId);			
 		}
 
+		/// <summary>
+		/// Remove user.
+		/// </summary>
+		/// <param name="id">User id.</param>
+		/// <returns>OK.</returns>
+		/// <responce code="200">No content.</responce>
+		/// <response code="404">User with id was not found.</response>
 		[HttpDelete("{id:guid}")]
 		public async Task<ActionResult> DeleteUser(Guid id)
 		{
-			var command = new DeleteUser(id);
+			try
+			{
+				var command = new DeleteUser(id);
 
-			await _mediator.Send(command);
+				await _mediator.Send(command);
+			}
+			catch (Exception ex) 
+			{
+				return BadRequest(ex.Message);
+			}
 
 			return NoContent();
 		}
 
+
+		/// <summary>
+		/// Update specific user.
+		/// </summary>
+		/// <param name="id">User id.</param>
+		/// <param name="command">User details.</param>
+		/// <returns></returns>
+		/// <responce code="200">No content.</responce>
+		/// <responce code="400">One or more errors have occured.</responce>
 		[HttpPut("{id:guid}")]
 		public async Task<ActionResult> UpdateUser(Guid id, [FromBody] UpdateUser command)
 		{
