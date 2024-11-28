@@ -3,11 +3,11 @@ using Microsoft.Extensions.Logging;
 
 namespace HotelManagement.Application.Common.Behavior
 {
-	class UnhandledExceptions<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
+	class UnhandledExceptionsBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 	{
 		private readonly ILogger<TRequest> _logger;
 
-		public UnhandledExceptions(ILogger<TRequest> logger)
+		public UnhandledExceptionsBehavior(ILogger<TRequest> logger)
 		{
 			_logger = logger;
 		}

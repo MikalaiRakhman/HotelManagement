@@ -48,14 +48,14 @@ namespace HotelManagement.Web.Controllers
 		public async Task<ActionResult> GetBookingsByRoomId(Guid roomId)
 		{
 			var query = new GetBookingsByRoomId(roomId);
-			var resylt = await _mediator.Send(query);
+			var result = await _mediator.Send(query);
 
-			if (resylt is null or [])
+			if (result is null or [])
 			{
 				return NotFound();
 			}
 
-			return Ok(resylt);
+			return Ok(result);
 		}
 
 

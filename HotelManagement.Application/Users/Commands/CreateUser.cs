@@ -27,8 +27,6 @@ namespace HotelManagement.Application.Users.Commands
 				FirstName = request.FirstName,
 				LastName = request.LastName,
 				Email = request.Email,
-				CreatedAt = DateTime.Now,
-				LastModifiedAt = DateTime.Now,
 			};
 
 			_context.Users.Add(entity);

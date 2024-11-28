@@ -16,12 +16,12 @@ namespace HotelManagement.Application.Users.Validators
 			RuleFor(u => u.FirstName)
 				.MaximumLength(30)
 				.NotEmpty()
-				.WithMessage("FirstName is required!");
+				.WithMessage("First name is required.");
 
 			RuleFor(u => u.LastName)
 				.MaximumLength(30)
 				.NotEmpty()
-				.WithMessage("Lastname is required!");
+				.WithMessage("Last name is required.");
 
 			RuleFor(u => u.Email)
 				.EmailAddress()

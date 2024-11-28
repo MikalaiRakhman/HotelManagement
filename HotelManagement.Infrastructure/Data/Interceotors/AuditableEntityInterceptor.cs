@@ -11,7 +11,7 @@ namespace HotelManagement.Infrastructure.Data.Interceotors
 
 		public AuditableEntityInterceptor(TimeProvider dateTime)
 		{
-			_dateTime = dateTime;			
+			_dateTime = dateTime;
 		}
 
 		public override InterceptionResult<int> SavingChanges (DbContextEventData eventData, InterceptionResult<int> result)

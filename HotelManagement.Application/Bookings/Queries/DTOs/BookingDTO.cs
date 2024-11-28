@@ -1,9 +1,8 @@
-﻿using HotelManagement.Domain.Common;
-
-namespace HotelManagement.Application.Bookings.Queries.DTOs
+﻿namespace HotelManagement.Application.Bookings.Queries.DTOs
 {
-	public class BookingDTO : BaseEntity
+	public class BookingDTO
 	{
+		public Guid Id { get; set; }
 		public DateOnly StartDate { get; set; }
 		public DateOnly EndDate { get; set; }
 		public int TotalPrice { get; set; }

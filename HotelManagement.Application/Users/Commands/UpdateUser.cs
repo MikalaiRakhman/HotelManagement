@@ -7,7 +7,7 @@ namespace HotelManagement.Application.Users.Commands
 	{
 		public Guid Id { get; init; }
 		public string FirstName { get; init; }
-		public string LastName { get; init; }		
+		public string LastName { get; init; }
 		public string Email { get; init; }
 	}
 
@@ -24,15 +24,11 @@ namespace HotelManagement.Application.Users.Commands
 		{
 			var entity = await _context.Users.FindAsync([request.Id] ,cancellationToken);
 
-			if (entity == null) 
-			{
-				throw new Exception($"Entity with Id = {request.Id} was not found!");
-			}
+			Guard.AgainstNull(entity, nameof(entity));
 
 			entity.FirstName = request.FirstName;
 			entity.LastName = request.LastName;
 			entity.Email = request.Email;
-			entity.LastModifiedAt = DateTime.Now;
 
 			await _context.SaveChangesAsync(cancellationToken);
 		}

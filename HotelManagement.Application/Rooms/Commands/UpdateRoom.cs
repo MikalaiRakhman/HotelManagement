@@ -1,7 +1,6 @@
 ﻿using HotelManagement.Application.Common;
 using HotelManagement.Domain.Entities.Enums;
 using MediatR;
-
 namespace HotelManagement.Application.Rooms.Commands
 {
 	public record UpdateRoom : IRequest
@@ -24,17 +23,12 @@ namespace HotelManagement.Application.Rooms.Commands
 		public async Task Handle(UpdateRoom request, CancellationToken cancellationToken)
 		{
 			var entity = await _context.Rooms.FindAsync(request.Id, cancellationToken);
-
-			if (entity == null)
-			{
-				throw new Exception($"Entity with Id = {request.Id} was not found!");
-			}
+			Guard.AgainstNull(entity, nameof(entity));
 
 			entity.RoomNumber = request.RoomNumber;
 			entity.RoomType = request.RoomType;
 			entity.PricePerNight = request.PricePerNight;
 			entity.IsAvailable = true;
-			entity.LastModifiedAt = DateTime.Now;
 
 			await _context.SaveChangesAsync(cancellationToken);
 		}

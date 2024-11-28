@@ -26,7 +26,7 @@ namespace HotelManagement.Application.Bookings.Queries
 
 		public async Task<List<BookingDTO>> Handle(GetBookingsByRoomId request, CancellationToken cancellationToken)
 		{
-			return await _context.Bookings
+			var entity = await _context.Bookings
 				.Where(b => b.RoomId == request.RoomId)
 				.Select(b => new BookingDTO
 				{
@@ -35,6 +35,10 @@ namespace HotelManagement.Application.Bookings.Queries
 					EndDate = b.EndDate,
 					TotalPrice = b.TotalPrice,
 				}).ToListAsync(cancellationToken);
+
+			Guard.AgainstNull(entity, nameof(entity));
+
+			return entity;
 		}
 	}
 }

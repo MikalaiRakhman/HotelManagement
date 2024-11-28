@@ -22,12 +22,14 @@ namespace HotelManagement.Infrastructure.Data
 			modelBuilder.Entity<Room>()
 				.HasMany(r => r.Bookings)
 				.WithOne(b => b.Room)
-				.HasForeignKey(b => b.RoomId);
+				.HasForeignKey(b => b.RoomId)
+				.OnDelete(DeleteBehavior.Cascade);
 
 			modelBuilder.Entity<User>()
 				.HasMany(u => u.Bookings)
 				.WithOne(b => b.User)
-				.HasForeignKey(b => b.UserId);
+				.HasForeignKey(b => b.UserId)
+				.OnDelete(DeleteBehavior.Cascade);
 		}
 	}
 }

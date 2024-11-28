@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using HotelManagement.Application.Common;
 using HotelManagement.Application.Rooms.Commands;
+using HotelManagement.Domain.Entities.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagement.Application.Rooms.Validators
@@ -15,22 +16,24 @@ namespace HotelManagement.Application.Rooms.Validators
 
 			RuleFor(r => r.RoomNumber)
 				.NotEmpty()
-				.WithMessage("RoomNumber is required!")
+				.WithMessage("Room number is required.")
 				.GreaterThan(0)
-				.WithMessage("RoomNumber must be greater than 0")
+				.WithMessage("Room number must be greater than 0.")
 				.MustAsync(BeUniqueRoomNumber)
-				.WithMessage("RoomNumber is already exist. RoomNumber should be unique.");
+				.WithMessage("Room number is already exist. Room number should be unique.");
 
 			RuleFor(r => r.RoomType)
 				.NotEmpty()
-				.WithMessage("RoomType is required!")
-				.IsInEnum();
+				.WithMessage("Room type is required.")
+				.IsInEnum()
+				.NotEqual(RoomType.None)
+				.WithMessage("Room type cannot be None (0).");
 
 			RuleFor(r => r.PricePerNight)
 				.NotEmpty()
-				.WithMessage("PricePerNight is required!")
+				.WithMessage("Price is required.")
 				.GreaterThan(0)
-				.WithMessage("PricePerNight must be greater than 0");
+				.WithMessage("Price must be greater than 0.");
 		}
 
 		private async Task<bool> BeUniqueRoomNumber(int roomNumber, CancellationToken cancellationToken)

@@ -11,7 +11,7 @@ namespace HotelManagement.Web
 		{
 			_exceptionHandlers = new Dictionary<Type, Func<HttpContext, Exception, Task>>
 			{
-				{typeof(Validation), HandleValidationException }
+				{typeof(ValidationException), HandleValidationException }
 			};
 		}
 
@@ -30,7 +30,7 @@ namespace HotelManagement.Web
 
 		private async Task HandleValidationException(HttpContext httpContext, Exception ex)
 		{
-			var exception = (Validation)ex;
+			var exception = (ValidationException)ex;
 
 			httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
 

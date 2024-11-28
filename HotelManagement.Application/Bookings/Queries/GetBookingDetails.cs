@@ -26,7 +26,7 @@ namespace HotelManagement.Application.Bookings.Queries
 
 		public async Task<BookingDetailsDTO> Handle(GetBookingDetails request, CancellationToken cancellationToken)
 		{
-			var bookingDetails =  await _context.Bookings
+			var entity =  await _context.Bookings
 				.Where(b => b.Id == request.Id)
 				.Select(b => new BookingDetailsDTO
 				{
@@ -37,12 +37,9 @@ namespace HotelManagement.Application.Bookings.Queries
 					RoomDetails = $"Room number is {b.Room.RoomNumber}. Room type is {b.Room.RoomType}. Price for one night is {b.Room.PricePerNight}."
 				}).FirstOrDefaultAsync(cancellationToken);
 
-			if (bookingDetails == null) 
-			{
-				throw new Exception($"Booking with {request.Id} was not found");
-			}
+			Guard.AgainstNull(entity, nameof(entity));
 
-			return bookingDetails;
+			return entity;
 		}
 	}
 }

@@ -9,15 +9,15 @@ namespace HotelManagement.Application.Bookings.Validators
 		{
 			RuleFor(b => b.UserId)
 				.NotEmpty()
-				.WithMessage("UserId is required")
+				.WithMessage("User id is required.")
 				.Must(IsValidGuid)
-				.WithMessage("UserId must be a valid GUID");
+				.WithMessage("User id must be valid.");
 
 			RuleFor(b => b.RoomId)
 				.NotEmpty()
-				.WithMessage("RoomId is required!")
+				.WithMessage("Room id is required.")
 				.Must(IsValidGuid)
-				.WithMessage("RoomId must be a valid GUID");
+				.WithMessage("Room id must be valid.");
 
 			RuleFor(b => b.StartDate)
 				.LessThan(b => b.EndDate)

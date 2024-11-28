@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace HotelManagement.Application
 {
-	public static class DependensyInjection 
+	public static class DependencyInjection 
 	{
 		public static IServiceCollection AddApplicationServices(this IServiceCollection services) 
 		{
@@ -15,8 +15,8 @@ namespace HotelManagement.Application
 			services.AddMediatR(cfg =>
 			{
 				cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-				cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(Validation<,>));
-				cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptions<,>));
+				cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+				cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionsBehavior<,>));
 			});
 
 			return services;

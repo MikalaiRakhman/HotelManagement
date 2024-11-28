@@ -1,14 +1,14 @@
 ﻿using FluentValidation;
 using MediatR;
-using ValidationException = HotelManagement.Application.Common.Exceptions.Validation;
+using ValidationException = HotelManagement.Application.Common.Exceptions.ValidationException;
 
 namespace HotelManagement.Application.Common.Behavior
 {
-	public class Validation<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
+	public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 	{
 		private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-		public Validation(IEnumerable<IValidator<TRequest>> validators)
+		public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
 		{
 			_validators = validators;
 		}

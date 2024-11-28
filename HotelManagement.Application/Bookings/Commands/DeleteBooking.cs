@@ -17,13 +17,9 @@ namespace HotelManagement.Application.Bookings.Commands
 		public async Task Handle(DeleteBooking request, CancellationToken cancellationToken)
 		{
 			var entity = await _context.Bookings.FindAsync([request.Id], cancellationToken);
+			Guard.AgainstNull(entity, nameof(entity));
 
-			if (entity == null) 
-			{
-				throw new Exception($"Entity with Id = {request.Id} was not found.");
-			}
-
-			_context.Bookings.Remove(entity);		
+			_context.Bookings.Remove(entity);
 
 			await _context.SaveChangesAsync(cancellationToken);
 		}

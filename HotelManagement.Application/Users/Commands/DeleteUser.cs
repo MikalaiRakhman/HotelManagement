@@ -16,16 +16,11 @@ namespace HotelManagement.Application.Users.Commands
 
 		public async Task Handle(DeleteUser request, CancellationToken cancellationToken)
 		{
-			try
-			{
-				var entity = await _context.Users.FindAsync([request.Id], cancellationToken);
+			var entity = await _context.Users.FindAsync([request.Id], cancellationToken);
 
-				_context.Users.Remove(entity);
-			}
-			catch (Exception ex)
-			{
-				throw new Exception($"User with id = {request.Id} was not found.");
-			}
+			Guard.AgainstNull(entity, nameof(entity));
+
+			_context.Users.Remove(entity);
 
 			await _context.SaveChangesAsync(cancellationToken);
 		}

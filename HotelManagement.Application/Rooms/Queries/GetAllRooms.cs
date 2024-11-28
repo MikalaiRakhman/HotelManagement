@@ -28,7 +28,7 @@ namespace HotelManagement.Application.Rooms.Queries
 				RoomType = r.RoomType,
 				PricePerNight = r.PricePerNight,
 				IsAvailable = r.IsAvailable,
-			}).ToListAsync(cancellationToken);			
+			}).ToListAsync(cancellationToken);
 		}
 
 		private bool IsCurrentDateInRange(DateOnly startDate, DateOnly endDate)

@@ -10,19 +10,19 @@ namespace HotelManagement.Infrastructure.Data
 
 		public ApplicationDbContextInitialiser(ApplicationDbContext context)
 		{
-			_context = context;			
+			_context = context;
 		}
 
 		public async Task InitialiseAsync()
 		{			
-			await _context.Database.MigrateAsync();			
+			await _context.Database.MigrateAsync();
 		}
 
 		public async Task SeedAsync()
 		{
 			var adminId = Guid.NewGuid();
 
-			var suitRoomId = Guid.NewGuid();				
+			var suitRoomId = Guid.NewGuid();
 
 			if (!_context.Users.Any()) 
 			{
@@ -34,24 +34,18 @@ namespace HotelManagement.Infrastructure.Data
 							FirstName = "Mikalai",
 							LastName = "Rakhman",
 							Email = "rakhmanmikalai@gmail.com",
-							CreatedAt = new(2020, 10, 08),
-							LastModifiedAt = new(2020, 10, 08),					
 						},
 						new User
 						{
 							FirstName = "Adam",
 							LastName = "Mitskevich",
 							Email = "adammitskevich@bel.com",
-							CreatedAt = new(2020, 10, 08),
-							LastModifiedAt = new(2020, 10, 08),
 						},
 						new User
 						{
 							FirstName = "Mike",
 							LastName = "Tyson",
 							Email = "champ@boxing.com",
-							CreatedAt = new(2020, 10, 08),
-							LastModifiedAt = new(2020, 10, 08),
 						}
 					);
 
@@ -69,8 +63,6 @@ namespace HotelManagement.Infrastructure.Data
 							RoomType = RoomType.Suite,
 							PricePerNight = 1000,
 							IsAvailable = false,
-							CreatedAt = DateTime.Now,
-							LastModifiedAt = DateTime.Now,					
 						},
 						new Room
 						{
@@ -78,8 +70,6 @@ namespace HotelManagement.Infrastructure.Data
 							RoomType = RoomType.Double_Room,
 							PricePerNight = 200,
 							IsAvailable = true,
-							CreatedAt = DateTime.Now,
-							LastModifiedAt = DateTime.Now,					
 						},
 						new Room
 						{
@@ -87,8 +77,6 @@ namespace HotelManagement.Infrastructure.Data
 							RoomType = RoomType.King_Room,
 							PricePerNight = 500,
 							IsAvailable = true,
-							CreatedAt = DateTime.Now,
-							LastModifiedAt = DateTime.Now
 						},
 						new Room
 						{
@@ -96,8 +84,6 @@ namespace HotelManagement.Infrastructure.Data
 							RoomType = RoomType.Single_Room,
 							PricePerNight = 100,
 							IsAvailable = true,
-							CreatedAt = DateTime.Now,
-							LastModifiedAt = DateTime.Now
 						}
 					);
 
@@ -114,7 +100,7 @@ namespace HotelManagement.Infrastructure.Data
 							RoomId = suitRoomId,
 							StartDate = new(2020, 10, 08),
 							EndDate = new(2020, 11, 08),
-							TotalPrice = 3000							
+							TotalPrice = 3000
 						}
 					);
 
