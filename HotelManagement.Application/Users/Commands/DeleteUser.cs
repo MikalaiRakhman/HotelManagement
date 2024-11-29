@@ -18,6 +18,8 @@ namespace HotelManagement.Application.Users.Commands
 		{
 			var entity = await _context.Users.FindAsync([request.Id], cancellationToken);
 
+			Guard.AgainstNull(entity, nameof(entity));
+
 			_context.Users.Remove(entity);
 
 			await _context.SaveChangesAsync(cancellationToken);

@@ -1,5 +1,7 @@
 using HotelManagement.Application;
+using HotelManagement.Application.Common;
 using HotelManagement.Infrastructure.Data;
+using HotelManagement.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
+
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
@@ -28,5 +33,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseExceptionHandler(options => { });
 
 app.Run();

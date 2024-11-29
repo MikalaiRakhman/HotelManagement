@@ -1,13 +1,12 @@
 ﻿using HotelManagement.Domain.Common;
-using System.ComponentModel.DataAnnotations;
 
 namespace HotelManagement.Domain.Entities
 {
-	public class User : BaseEntity
+	public class User : BaseAuditableEntity
 	{
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
-		[EmailAddress]
 		public string Email { get; set; }
+		public ICollection<Booking> Bookings { get; set; }
 	}
 }

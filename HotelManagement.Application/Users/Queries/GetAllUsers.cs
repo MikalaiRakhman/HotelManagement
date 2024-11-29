@@ -1,15 +1,14 @@
 ﻿using HotelManagement.Application.Common;
-using HotelManagement.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagement.Application.Users.Queries
 {
-	public record class GetAllUsers : IRequest<List<User>>
+	public record class GetAllUsers : IRequest<List<UserDTO>>
 	{
 	}
 
-	public class GetAllUsersHandler : IRequestHandler<GetAllUsers, List<User>>
+	public class GetAllUsersHandler : IRequestHandler<GetAllUsers, List<UserDTO>>
 	{
 		private readonly IApplicationDbContext _context;
 
@@ -18,16 +17,15 @@ namespace HotelManagement.Application.Users.Queries
 			_context = context;
 		}
 
-		public async Task<List<User>> Handle(GetAllUsers request, CancellationToken cancellationToken)
+		public async Task<List<UserDTO>> Handle(GetAllUsers request, CancellationToken cancellationToken)
 		{
-			return await _context.Users
-				.Select(u => new User
-				{
-					Id = u.Id,
-					FirstName = u.FirstName,
-					LastName = u.LastName,
-					Email = u.Email,
-				}).ToListAsync(cancellationToken);
+			return await _context.Users.Select(u => new UserDTO
+			{
+				Id = u.Id,
+				FirstName = u.FirstName,
+				LastName = u.LastName,
+				Email = u.Email,
+			}).ToListAsync(cancellationToken);
 		}
 	}
 }

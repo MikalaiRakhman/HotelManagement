@@ -1,9 +1,11 @@
 @HotelManagement.Web_HostAddress = http://localhost:5096/api
 
+
+### Users Controller ###
+
 ### Get all users
 GET {{HotelManagement.Web_HostAddress}}/users
 Accept: application/json
-
 ###
 
 ### Create user
@@ -14,8 +16,120 @@ Content-Type: application/json
     "lastName": "Bush",
     "email": "american@president.com"
 }
+###
 
+### Update user
+PUT {{HotelManagement.Web_HostAddress}}/users/{userId}
+Content-Type: applictaion/json
+{
+     "id": "{userId}",
+     "firstName": "FirstName",
+     "lastName": "LastName",
+     "email": "string@gmil.com"
+}
 ###
 
 ### Delete user
-DELETE {{HotelManagement.Web_HostAddress}}/users/80c73c39-d62c-4a0d-9dab-08dcfb66b7ee
+DELETE {{HotelManagement.Web_HostAddress}}/users/{userId}
+Content-Type: application/json
+{
+     "id": "{userId}"
+}
+###
+
+### Get booking by user Id
+GET {{HotelManagement.Web_HostAddress}}/{userId}/bookings
+Content-Type: application/json
+{  
+     "id": "{userId}"
+}
+###
+
+### Rooms Controller ###
+### Get all rooms
+GET {{HotelManagement.Web_HostAddress}}/rooms
+Accept : application/json
+###
+
+### Create room
+POST {{HotelManagement.Web_HostAddress}}/rooms
+Content-Type: application/json
+{  
+    "roomNumber": 24,
+    "roomType": 2,
+    "pricePerNight": 500
+}
+###
+
+### Update room
+PUT {{HotelManagement.Web_HostAddress}}/rooms/{roomId}
+Content-Type: application/json
+{
+    "id": "{roomId}",
+    "roomNumber": 25,
+    "roomType": 1,
+    "pricePerNight": 450
+}
+###
+
+### Delete room
+DELETE {{HotelManagement.Web_HostAddress}}/rooms/{roomId}
+Content-Type: application/json
+{
+    "id": "{roomId}"
+}
+###
+
+### Get booking by room Id
+GET {{HotelManagement.Web_HostAddress}}/{roomId}/bookings
+Conten-Type: application/json
+{
+    "id": "{roomId}"
+}
+###
+
+### Bokings Controller
+### Get all bookings
+GET {{HotelManagement.Web_HostAddress}}/bookings
+Accept: application/json
+###
+
+### Create booking
+POST {{HotelManagement.Web_HostAddress}}/bookings
+Content-Type: application/json
+{
+    "userId": "{userId}",
+    "roomId": "{roomId}",
+    "startDate": "2025-11-25",
+    "endDate": "2026-11-25"
+}
+###
+
+### Get booking details
+GET {{HotelManagement.Web_HostAddress}}/booking/{bookingId}
+Content-Type : application/json
+{
+    "id": "{bookingId}"
+}
+###
+
+### Update booking
+PUT {{HotelManagement.Web_HostAddress}}/bookings/{bookingId}
+Content-Type: application/json
+{
+    "id": "{bookingId}",
+    "userId": "{userId}",
+    "roomId": "{roomId}",
+    "startDate": "2025-12-25",
+    "endDate": "2026-12-25"
+}
+###
+
+### Delete booking
+DELETE {{HotelManagement.Web_HostAddress}}/bookings/{bookingId}
+Content-Type: application/json
+{
+    "id": "{bookingId}"
+}
+###
+
