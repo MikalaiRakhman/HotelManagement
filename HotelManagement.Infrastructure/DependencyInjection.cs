@@ -1,6 +1,7 @@
 ﻿using HotelManagement.Application.Common;
 using HotelManagement.Infrastructure.Data;
 using HotelManagement.Infrastructure.Data.Interceotors;
+using HotelManagement.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;

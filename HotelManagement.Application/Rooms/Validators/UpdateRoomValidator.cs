@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using HotelManagement.Application.Common;
 using HotelManagement.Application.Rooms.Commands;
-using HotelManagement.Domain.Entities.Enums;
+using HotelManagement.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagement.Application.Rooms.Validators

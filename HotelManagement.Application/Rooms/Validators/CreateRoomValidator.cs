@@ -2,7 +2,7 @@
 using HotelManagement.Application.Common;
 using HotelManagement.Application.Rooms.Commands;
 using Microsoft.EntityFrameworkCore;
-using HotelManagement.Domain.Entities.Enums;
+using HotelManagement.Domain.Enums;
 
 namespace HotelManagement.Application.Rooms.Validators
 {

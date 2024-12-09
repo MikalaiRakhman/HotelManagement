@@ -1,7 +1,8 @@
 using HotelManagement.Application;
-using HotelManagement.Application.Common;
 using HotelManagement.Infrastructure.Data;
+using HotelManagement.Infrastructure.Identity;
 using HotelManagement.Web;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,10 +14,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
+	.AddEntityFrameworkStores<ApplicationDbContext>()
+	.AddDefaultTokenProviders();	
+
 builder.Services.AddApplicationServices();
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddHttpContextAccessor();
+
+
 
 var app = builder.Build();
 

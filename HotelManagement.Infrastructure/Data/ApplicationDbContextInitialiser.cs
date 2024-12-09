@@ -1,5 +1,5 @@
-﻿using HotelManagement.Domain.Entities;
-using HotelManagement.Domain.Entities.Enums;
+﻿using HotelManagement.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagement.Infrastructure.Data
@@ -7,10 +7,17 @@ namespace HotelManagement.Infrastructure.Data
 	public class ApplicationDbContextInitialiser
 	{
 		private readonly ApplicationDbContext _context;
+		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly RoleManager<IdentityRole<Guid>> _roleManager;
 
-		public ApplicationDbContextInitialiser(ApplicationDbContext context)
+		public ApplicationDbContextInitialiser(
+			ApplicationDbContext context, 
+			RoleManager<IdentityRole<Guid>> roleManager,
+			UserManager<ApplicationUser> userManager)
 		{
 			_context = context;
+			_roleManager = roleManager;
+			_userManager = userManager;
 		}
 
 		public async Task InitialiseAsync()
@@ -20,92 +27,35 @@ namespace HotelManagement.Infrastructure.Data
 
 		public async Task SeedAsync()
 		{
-			var adminId = Guid.NewGuid();
-
-			var suitRoomId = Guid.NewGuid();
-
-			if (!_context.Users.Any()) 
+			foreach (var role in Enum.GetNames(typeof(ApplicationRole)))
 			{
-				await _context.Users.AddRangeAsync
-					(
-						new User
-						{
-							Id = adminId,
-							FirstName = "Mikalai",
-							LastName = "Rakhman",
-							Email = "rakhmanmikalai@gmail.com",
-						},
-						new User
-						{
-							FirstName = "Adam",
-							LastName = "Mitskevich",
-							Email = "adammitskevich@bel.com",
-						},
-						new User
-						{
-							FirstName = "Mike",
-							LastName = "Tyson",
-							Email = "champ@boxing.com",
-						}
-					);
-
-				await _context.SaveChangesAsync();
+				if (await _roleManager.RoleExistsAsync(role)) 
+				{
+					await _roleManager.CreateAsync(new IdentityRole<Guid> { Name = role });
+				}
 			}
 
-			if (!_context.Rooms.Any())
-			{
-				await _context.Rooms.AddRangeAsync
-					(
-						new Room
-						{
-							Id = suitRoomId,
-							RoomNumber = 1,
-							RoomType = RoomType.Suite,
-							PricePerNight = 1000,
-							IsAvailable = false,
-						},
-						new Room
-						{
-							RoomNumber = 2,
-							RoomType = RoomType.Double_Room,
-							PricePerNight = 200,
-							IsAvailable = true,
-						},
-						new Room
-						{
-							RoomNumber = 3,
-							RoomType = RoomType.King_Room,
-							PricePerNight = 500,
-							IsAvailable = true,
-						},
-						new Room
-						{
-							RoomNumber = 4,
-							RoomType = RoomType.Single_Room,
-							PricePerNight = 100,
-							IsAvailable = true,
-						}
-					);
+			var adminEmail = "admin@test.com";
+			var adminUser = await _userManager.FindByEmailAsync(adminEmail);
 
-				await _context.SaveChangesAsync();
+			if (adminUser == null)
+			{
+				adminUser = new ApplicationUser
+				{
+					FirstName = "FirstNameAdmin",
+					LastName = "LastNameAdmin",
+					Email = adminEmail
+				};
+
+				var result = await _userManager.CreateAsync(adminUser, "AdminPassword!1");
+
+				if (result.Succeeded)
+				{
+					await _userManager.AddToRoleAsync(adminUser, ApplicationRole.Admin.ToString());
+				}
 			}
-
-			if (!_context.Bookings.Any())
-			{
-				await _context.Bookings.AddAsync
-					(
-						new Booking
-						{
-							UserId = adminId,
-							RoomId = suitRoomId,
-							StartDate = new(2020, 10, 08),
-							EndDate = new(2020, 11, 08),
-							TotalPrice = 3000
-						}
-					);
-
-				await _context.SaveChangesAsync();
-			}			
+			
+			await _context.SaveChangesAsync();
 		}
 	}
 }

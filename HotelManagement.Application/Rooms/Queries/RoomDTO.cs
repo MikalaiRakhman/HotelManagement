@@ -1,8 +1,8 @@
-﻿using HotelManagement.Domain.Entities.Enums;
+﻿using HotelManagement.Domain.Enums;
 
 namespace HotelManagement.Application.Rooms.Queries
 {
-    public class RoomDTO
+	public class RoomDTO
     {
 		public Guid Id { get; set; }
 		public int RoomNumber { get; set; }

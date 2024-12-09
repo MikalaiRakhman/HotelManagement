@@ -1,10 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using HotelManagement.Application.Common;
 using HotelManagement.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using HotelManagement.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace HotelManagement.Infrastructure.Data
 {
-	public class ApplicationDbContext : DbContext, IApplicationDbContext
+	public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>, IApplicationDbContext
 	{
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
 		{
