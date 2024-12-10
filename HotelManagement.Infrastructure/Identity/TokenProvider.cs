@@ -16,7 +16,7 @@ namespace HotelManagement.Infrastructure.Identity
 			_configuration = configuration;
 		}
 
-		public string GenerateJwtToken(User user, IList<string> roles)
+		public string GenerateJwtToken(ApplicationUser user, IList<string> roles)
 		{
 			var claims = new List<Claim>
 			{

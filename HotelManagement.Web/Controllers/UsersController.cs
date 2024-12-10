@@ -58,25 +58,6 @@ namespace HotelManagement.Web.Controllers
 			return Ok(result);
 		}
 
-		/// <summary>
-		/// Create new user.
-		/// </summary>
-		/// <param name="command">User details.</param>
-		/// <returns>User id.</returns>
-		/// <responce code="200">Return user id.</responce>
-		/// <responce code="400">One or more errors have occured.</responce>
-		[HttpPost]
-		public async Task<ActionResult<Guid>> CreateUser([FromBody] CreateUser command)
-		{			
-			var userId = await _mediator.Send(command);
-
-			if (userId == Guid.Empty) 
-			{
-				return BadRequest("An arror occured!");
-			}
-
-			return Ok(userId);			
-		}
 
 		/// <summary>
 		/// Remove user.

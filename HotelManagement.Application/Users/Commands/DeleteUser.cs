@@ -7,7 +7,7 @@ namespace HotelManagement.Application.Users.Commands
 
 	public class DeleteUserHandler : IRequestHandler<DeleteUser>
 	{
-		private readonly IApplicationDbContext _context;
+		private readonly IApplicationDbContext _context;		
 
 		public DeleteUserHandler(IApplicationDbContext context)
 		{

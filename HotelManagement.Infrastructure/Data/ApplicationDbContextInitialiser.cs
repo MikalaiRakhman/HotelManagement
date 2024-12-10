@@ -1,4 +1,5 @@
-﻿using HotelManagement.Infrastructure.Identity;
+﻿using HotelManagement.Domain.Entities;
+using HotelManagement.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,7 +30,7 @@ namespace HotelManagement.Infrastructure.Data
 		{
 			foreach (var role in Enum.GetNames(typeof(ApplicationRole)))
 			{
-				if (await _roleManager.RoleExistsAsync(role)) 
+				if (!await _roleManager.RoleExistsAsync(role)) 
 				{
 					await _roleManager.CreateAsync(new IdentityRole<Guid> { Name = role });
 				}
@@ -42,6 +43,7 @@ namespace HotelManagement.Infrastructure.Data
 			{
 				adminUser = new ApplicationUser
 				{
+					UserName = adminEmail,
 					FirstName = "FirstNameAdmin",
 					LastName = "LastNameAdmin",
 					Email = adminEmail
@@ -54,6 +56,15 @@ namespace HotelManagement.Infrastructure.Data
 					await _userManager.AddToRoleAsync(adminUser, ApplicationRole.Admin.ToString());
 				}
 			}
+
+			var userConvertFromAppUserToUser = new User
+			{
+				FirstName = adminUser.FirstName,
+				LastName = adminUser.LastName,
+				Email = adminUser.Email
+			};
+
+			await _context.AddAsync(userConvertFromAppUserToUser);
 			
 			await _context.SaveChangesAsync();
 		}
