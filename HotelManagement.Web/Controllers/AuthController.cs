@@ -67,6 +67,21 @@ namespace HotelManagement.Web.Controllers
 			return Ok(new {Token = token, RefreshToken = refreshToken.Result});
 		}
 
+		[HttpPost("refresh-token")]
+		public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenModel model, CancellationToken cancellationToken)
+		{
+			try
+			{
+				var (newJwtToken, newRefreshToken) = await _tokenProvider.RefreshTokens(model.RefreshToken, cancellationToken);
+
+				return Ok(new { Token = newJwtToken, RefreshToken = newRefreshToken });
+			}
+			catch (UnauthorizedAccessException ex)
+			{
+				return Unauthorized(new { Error = ex.Message });
+			}
+		}
+
 		private User ConvertToDomainUser(ApplicationUser appUser)
 		{
 			return new User
