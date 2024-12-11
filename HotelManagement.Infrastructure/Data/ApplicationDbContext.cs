@@ -17,6 +17,7 @@ namespace HotelManagement.Infrastructure.Data
 		public DbSet<User> Users {  get; set; }
 		public DbSet<Room> Rooms {  get; set; }
 		public DbSet<Booking> Bookings {  get; set; }
+		public DbSet<RefreshToken> RefreshTokens { get; set; }
 
 		protected override void OnModelCreating (ModelBuilder modelBuilder)
 		{
@@ -33,6 +34,15 @@ namespace HotelManagement.Infrastructure.Data
 				.WithOne(b => b.User)
 				.HasForeignKey(b => b.UserId)
 				.OnDelete(DeleteBehavior.Cascade);
+
+			modelBuilder.Entity<RefreshToken>()
+				.HasIndex(rt => rt.Token)
+				.IsUnique();
+
+			modelBuilder.Entity<RefreshToken>()
+				.HasOne(rt => rt.ApplicationUser)
+				.WithMany()
+				.HasForeignKey(rt => rt.ApplicationUserId);
 		}
 	}
 }

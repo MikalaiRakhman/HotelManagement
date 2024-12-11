@@ -50,20 +50,21 @@ namespace HotelManagement.Web.Controllers
 		}
 
 		[HttpPost("login")]
-		public async Task<IActionResult> Login([FromBody] LoginModel model)
+		public async Task<IActionResult> Login([FromBody] LoginModel model, CancellationToken cancellationToken)
 		{
-			var user = await _userManager.FindByEmailAsync(model.Email);
+			var applicationUser = await _userManager.FindByEmailAsync(model.Email);
 
-			Guard.AgainstUnauthorized(user);
+			Guard.AgainstUnauthorized(applicationUser);
 
-			var  isValidPassword = await _userManager.CheckPasswordAsync(user, model.Password);
+			var  isValidPassword = await _userManager.CheckPasswordAsync(applicationUser, model.Password);
 
 			Guard.AgainsInvalidPassword(isValidPassword);
 			
-			var roles = await _userManager.GetRolesAsync(user);
-			var token = _tokenProvider.GenerateJwtToken(user, roles);
+			var roles = await _userManager.GetRolesAsync(applicationUser);
+			var token = _tokenProvider.GenerateJwtToken(applicationUser, roles);
+			var refreshToken = _tokenProvider.GenerateRefreshToken(applicationUser.Id, cancellationToken);
 
-			return Ok(new {Token = token});
+			return Ok(new {Token = token, RefreshToken = refreshToken.Result});
 		}
 
 		private User ConvertToDomainUser(ApplicationUser appUser)
