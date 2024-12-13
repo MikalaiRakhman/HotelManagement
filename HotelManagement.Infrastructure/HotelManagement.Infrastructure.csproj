@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HotelManagement.Application\HotelManagement.Application.csproj" />
+    <ProjectReference Include="..\HotelManagement.Domain\HotelManagement.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -91,6 +91,5 @@ namespace HotelManagement.Web.Controllers
 				LastName = appUser.LastName,				
 			};
 		}
-
 	}
 }

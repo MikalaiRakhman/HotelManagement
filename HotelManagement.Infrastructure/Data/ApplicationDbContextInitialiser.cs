@@ -57,16 +57,21 @@ namespace HotelManagement.Infrastructure.Data
 				}
 			}
 
-			var userConvertFromAppUserToUser = new User
-			{
-				FirstName = adminUser.FirstName,
-				LastName = adminUser.LastName,
-				Email = adminUser.Email
-			};
+			var theSameUserInDatabase = await _context.Users.FirstOrDefaultAsync(u => u.Email == adminEmail);
 
-			await _context.AddAsync(userConvertFromAppUserToUser);
-			
-			await _context.SaveChangesAsync();
+			if (theSameUserInDatabase == null)
+			{
+				var userConvertFromAppUserToUser = new User
+				{
+					FirstName = adminUser.FirstName,
+					LastName = adminUser.LastName,
+					Email = adminUser.Email
+				};
+
+				await _context.AddAsync(userConvertFromAppUserToUser);
+
+				await _context.SaveChangesAsync();
+			}
 		}
 	}
 }
