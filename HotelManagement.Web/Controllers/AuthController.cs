@@ -27,8 +27,6 @@ namespace HotelManagement.Web.Controllers
 		{
 			var appUser = new ApplicationUser
 			{
-				FirstName = model.FirstName,
-				LastName = model.LastName,
 				Email = model.Email,
 				UserName = model.Email
 			};
@@ -86,9 +84,7 @@ namespace HotelManagement.Web.Controllers
 		{
 			return new User
 			{				
-				Email = appUser.Email,
-				FirstName = appUser.FirstName,
-				LastName = appUser.LastName,				
+				Email = appUser.Email,			
 			};
 		}
 	}

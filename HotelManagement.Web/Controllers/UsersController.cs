@@ -124,9 +124,6 @@ namespace HotelManagement.Web.Controllers
 			var applicationUser = await _userManager.FindByEmailAsync(userEmail);
 			Guard.AgainstNull(applicationUser, nameof(applicationUser));
 
-			applicationUser.FirstName = user.FirstName;
-			applicationUser.LastName = user.LastName;
-
 			await _userManager.UpdateAsync(applicationUser);
 
 			return NoContent();			

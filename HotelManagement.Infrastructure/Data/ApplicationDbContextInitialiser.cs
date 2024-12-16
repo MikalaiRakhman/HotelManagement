@@ -44,8 +44,6 @@ namespace HotelManagement.Infrastructure.Data
 				adminUser = new ApplicationUser
 				{
 					UserName = adminEmail,
-					FirstName = "FirstNameAdmin",
-					LastName = "LastNameAdmin",
 					Email = adminEmail
 				};
 
@@ -63,8 +61,6 @@ namespace HotelManagement.Infrastructure.Data
 			{
 				var userConvertFromAppUserToUser = new User
 				{
-					FirstName = adminUser.FirstName,
-					LastName = adminUser.LastName,
 					Email = adminUser.Email
 				};
 

@@ -28,8 +28,6 @@ namespace HotelManagement.Infrastructure.Identity
 			var claims = new List<Claim>
 			{
 				new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-				new Claim(ClaimTypes.Name, user.FirstName.ToString()),
-				new Claim(ClaimTypes.Surname, user.LastName.ToString())
 			};
 
 			foreach (var role in roles)
