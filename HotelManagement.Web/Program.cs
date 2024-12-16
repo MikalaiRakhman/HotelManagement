@@ -2,8 +2,19 @@ using HotelManagement.Application;
 using HotelManagement.Infrastructure.Data;
 using HotelManagement.Web;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+	.MinimumLevel.Information()
+	.Enrich.FromLogContext()
+	.WriteTo.Console()
+	.WriteTo.File($"Logs/log-{DateTime.Now:yyyy-MM-dd}.txt", rollingInterval: RollingInterval.Day)
+	.CreateLogger();
+
+builder.Host.UseSerilog();
+builder.Services.AddSingleton(Log.Logger);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -43,6 +54,7 @@ builder.Services.AddApplicationServices();
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddHttpContextAccessor();
 
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -51,7 +63,7 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI(c =>
 	{
-		c.SwaggerEndpoint("/swagger/v1/swagger.json", "HotelManagement V1");		
+		c.SwaggerEndpoint("/swagger/v1/swagger.json", "HotelManagement V1");
 	});
 }
 
