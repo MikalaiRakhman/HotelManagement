@@ -1,111 +1,88 @@
 ﻿using HotelManagement.Domain.Entities;
-using HotelManagement.Domain.Entities.Enums;
+using HotelManagement.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace HotelManagement.Infrastructure.Data
 {
 	public class ApplicationDbContextInitialiser
 	{
 		private readonly ApplicationDbContext _context;
+		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+		private readonly ILogger _logger;
 
-		public ApplicationDbContextInitialiser(ApplicationDbContext context)
+		public ApplicationDbContextInitialiser(
+			ApplicationDbContext context, 
+			RoleManager<IdentityRole<Guid>> roleManager,
+			UserManager<ApplicationUser> userManager,
+			ILogger logger)
 		{
 			_context = context;
+			_roleManager = roleManager;
+			_userManager = userManager;
+			_logger = logger;
 		}
 
 		public async Task InitialiseAsync()
-		{			
+		{
+			_logger.Information("Initializing database...");
 			await _context.Database.MigrateAsync();
+			_logger.Information("Database initialized successfully.");
 		}
 
 		public async Task SeedAsync()
 		{
-			var adminId = Guid.NewGuid();
-
-			var suitRoomId = Guid.NewGuid();
-
-			if (!_context.Users.Any()) 
+			_logger.Information("Seeding roles...");
+			foreach (var role in Enum.GetNames(typeof(ApplicationRole)))
 			{
-				await _context.Users.AddRangeAsync
-					(
-						new User
-						{
-							Id = adminId,
-							FirstName = "Mikalai",
-							LastName = "Rakhman",
-							Email = "rakhmanmikalai@gmail.com",
-						},
-						new User
-						{
-							FirstName = "Adam",
-							LastName = "Mitskevich",
-							Email = "adammitskevich@bel.com",
-						},
-						new User
-						{
-							FirstName = "Mike",
-							LastName = "Tyson",
-							Email = "champ@boxing.com",
-						}
-					);
-
-				await _context.SaveChangesAsync();
+				if (!await _roleManager.RoleExistsAsync(role)) 
+				{
+					_logger.Information($"Creating role: {role}");
+					await _roleManager.CreateAsync(new IdentityRole<Guid> { Name = role });
+				}
 			}
 
-			if (!_context.Rooms.Any())
-			{
-				await _context.Rooms.AddRangeAsync
-					(
-						new Room
-						{
-							Id = suitRoomId,
-							RoomNumber = 1,
-							RoomType = RoomType.Suite,
-							PricePerNight = 1000,
-							IsAvailable = false,
-						},
-						new Room
-						{
-							RoomNumber = 2,
-							RoomType = RoomType.Double_Room,
-							PricePerNight = 200,
-							IsAvailable = true,
-						},
-						new Room
-						{
-							RoomNumber = 3,
-							RoomType = RoomType.King_Room,
-							PricePerNight = 500,
-							IsAvailable = true,
-						},
-						new Room
-						{
-							RoomNumber = 4,
-							RoomType = RoomType.Single_Room,
-							PricePerNight = 100,
-							IsAvailable = true,
-						}
-					);
+			var adminEmail = "admin@test.com";
 
-				await _context.SaveChangesAsync();
+			_logger.Information($"Checking if admin user exists: {adminEmail}");
+			var adminUser = await _userManager.FindByEmailAsync(adminEmail);
+
+			if (adminUser == null)
+			{
+				_logger.Information($"Creating admin user: {adminEmail}");
+				adminUser = new ApplicationUser
+				{
+					UserName = adminEmail,
+					Email = adminEmail
+				};
+
+				var result = await _userManager.CreateAsync(adminUser, "AdminPassword!1");
+
+				if (result.Succeeded)
+				{
+					_logger.Information("Admin user created successfully.");
+					await _userManager.AddToRoleAsync(adminUser, ApplicationRole.Admin.ToString());
+					_logger.Information("Admin user assigned to Admin role.");
+				}
 			}
 
-			if (!_context.Bookings.Any())
-			{
-				await _context.Bookings.AddAsync
-					(
-						new Booking
-						{
-							UserId = adminId,
-							RoomId = suitRoomId,
-							StartDate = new(2020, 10, 08),
-							EndDate = new(2020, 11, 08),
-							TotalPrice = 3000
-						}
-					);
+			_logger.Information($"Checking if user exists in Users table: {adminEmail}");
+			var theSameUserInDatabase = await _context.Users.FirstOrDefaultAsync(u => u.Email == adminEmail);
 
+			if (theSameUserInDatabase == null)
+			{
+				_logger.Information("Converting ApplicationUser to User entity and adding to database.");
+				var userConvertFromAppUserToUser = new User
+				{
+					Email = adminUser.Email
+				};
+
+				await _context.AddAsync(userConvertFromAppUserToUser);
 				await _context.SaveChangesAsync();
-			}			
+				_logger.Information("User entity added to database successfully.");
+			}
 		}
 	}
 }

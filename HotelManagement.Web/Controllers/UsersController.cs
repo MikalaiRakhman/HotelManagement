@@ -1,8 +1,11 @@
 ﻿using HotelManagement.Application.Bookings.Queries;
+using HotelManagement.Application.Common;
 using HotelManagement.Application.Users.Commands;
 using HotelManagement.Application.Users.Queries;
 using HotelManagement.Domain.Entities;
+using HotelManagement.Infrastructure.Identity;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Web.Controllers
@@ -12,10 +15,14 @@ namespace HotelManagement.Web.Controllers
 	public class UsersController : Controller
 	{
 		private readonly IMediator _mediator;
+		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly IApplicationDbContext _context;
 
-		public UsersController(IMediator mediator)
+		public UsersController(IMediator mediator, UserManager<ApplicationUser> userManager, IApplicationDbContext context)
 		{
 			_mediator = mediator;
+			_userManager = userManager;
+			_context = context;
 		}
 
 		/// <summary>
@@ -24,7 +31,7 @@ namespace HotelManagement.Web.Controllers
 		/// <returns>List of users.</returns>
 		/// <responce code="200">Return list of users.</responce>
 		[HttpGet]
-		public async Task<ActionResult<List<User>>> GerAllUsers()
+		public async Task<ActionResult<List<User>>> GetAllUsers()
 		{
 			var query = new GetAllUsers();
 			var users = await _mediator.Send(query);
@@ -58,25 +65,6 @@ namespace HotelManagement.Web.Controllers
 			return Ok(result);
 		}
 
-		/// <summary>
-		/// Create new user.
-		/// </summary>
-		/// <param name="command">User details.</param>
-		/// <returns>User id.</returns>
-		/// <responce code="200">Return user id.</responce>
-		/// <responce code="400">One or more errors have occured.</responce>
-		[HttpPost]
-		public async Task<ActionResult<Guid>> CreateUser([FromBody] CreateUser command)
-		{			
-			var userId = await _mediator.Send(command);
-
-			if (userId == Guid.Empty) 
-			{
-				return BadRequest("An arror occured!");
-			}
-
-			return Ok(userId);			
-		}
 
 		/// <summary>
 		/// Remove user.
@@ -90,9 +78,17 @@ namespace HotelManagement.Web.Controllers
 		{
 			try
 			{
+				var user = await _context.Users.FindAsync(id);
+				Guard.AgainstNull(user, nameof(user));
+
+				var applicationUser = await _userManager.FindByEmailAsync(user.Email);
+				Guard.AgainstNull(applicationUser, nameof(applicationUser));
+
 				var command = new DeleteUser(id);
 
 				await _mediator.Send(command);
+				await _userManager.DeleteAsync(applicationUser);
+				
 			}
 			catch (Exception ex) 
 			{
@@ -120,6 +116,15 @@ namespace HotelManagement.Web.Controllers
 			}
 			
 			await _mediator.Send(command);
+
+			var user = await _context.Users.FindAsync(id);
+			Guard.AgainstNull(user, nameof(user));
+			var userEmail = user.Email;
+
+			var applicationUser = await _userManager.FindByEmailAsync(userEmail);
+			Guard.AgainstNull(applicationUser, nameof(applicationUser));
+
+			await _userManager.UpdateAsync(applicationUser);
 
 			return NoContent();			
 		}

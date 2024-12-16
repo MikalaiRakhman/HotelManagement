@@ -1,6 +1,6 @@
 ﻿using HotelManagement.Application.Common;
 using HotelManagement.Domain.Entities;
-using HotelManagement.Domain.Entities.Enums;
+using HotelManagement.Domain.Enums;
 using MediatR;
 
 namespace HotelManagement.Application.Rooms.Commands

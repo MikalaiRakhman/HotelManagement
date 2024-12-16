@@ -15,4 +15,20 @@
 			throw new ArgumentException($"{argumentName} cannot be empty.", argumentName);
 		}
 	}
+
+	public static void AgainstUnauthorized(object argument)
+	{
+		if (argument == null)
+		{
+			throw new UnauthorizedAccessException($"Failed to login. User with this email was not found.");
+		}
+	}
+
+	public static void AgainsInvalidPassword(bool isTrue)
+	{
+		if (!isTrue)
+		{
+			throw new UnauthorizedAccessException($"Failed to login. Invalid password.");
+		}
+	}
 }

@@ -1,5 +1,5 @@
 ﻿using HotelManagement.Domain.Common;
-using HotelManagement.Domain.Entities.Enums;
+using HotelManagement.Domain.Enums;
 
 namespace HotelManagement.Domain.Entities
 {

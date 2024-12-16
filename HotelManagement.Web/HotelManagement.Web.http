@@ -8,16 +8,6 @@ GET {{HotelManagement.Web_HostAddress}}/users
 Accept: application/json
 ###
 
-### Create user
-POST {{HotelManagement.Web_HostAddress}}/users
-Content-Type: application/json
-{
-    "firstName": "George",
-    "lastName": "Bush",
-    "email": "american@president.com"
-}
-###
-
 ### Update user
 PUT {{HotelManagement.Web_HostAddress}}/users/{userId}
 Content-Type: applictaion/json
