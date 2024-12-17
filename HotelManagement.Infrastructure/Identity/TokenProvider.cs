@@ -40,7 +40,7 @@ namespace HotelManagement.Infrastructure.Identity
 
 			var token = new JwtSecurityToken(
 				issuer: _configuration["Jwt:Issuer"],
-				audience: _configuration["Jwt:Issuer"],
+				audience: _configuration["Jwt:Audience"],
 				claims: claims,
 				expires: DateTime.UtcNow.AddMinutes(15),
 				signingCredentials: creds);

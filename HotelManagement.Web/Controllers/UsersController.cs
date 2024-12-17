@@ -5,11 +5,13 @@ using HotelManagement.Application.Users.Queries;
 using HotelManagement.Domain.Entities;
 using HotelManagement.Infrastructure.Identity;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Web.Controllers
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class UsersController : Controller
