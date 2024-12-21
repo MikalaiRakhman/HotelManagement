@@ -50,19 +50,26 @@ namespace HotelManagement.Web.Controllers
 		[HttpPost("login")]
 		public async Task<IActionResult> Login([FromBody] LoginModel model, CancellationToken cancellationToken)
 		{
-			var applicationUser = await _userManager.FindByEmailAsync(model.Email);
+			try
+			{
+				var applicationUser = await _userManager.FindByEmailAsync(model.Email);
 
-			Guard.AgainstUnauthorized(applicationUser);
+				Guard.AgainstUnauthorized(applicationUser);
 
-			var  isValidPassword = await _userManager.CheckPasswordAsync(applicationUser, model.Password);
+				var isValidPassword = await _userManager.CheckPasswordAsync(applicationUser, model.Password);
 
-			Guard.AgainsInvalidPassword(isValidPassword);
-			
-			var roles = await _userManager.GetRolesAsync(applicationUser);
-			var token = _tokenProvider.GenerateJwtToken(applicationUser, roles);
-			var refreshToken = _tokenProvider.GenerateRefreshToken(applicationUser.Id, cancellationToken);
+				Guard.AgainsInvalidPassword(isValidPassword);
 
-			return Ok(new {Token = token, RefreshToken = refreshToken.Result});
+				var roles = await _userManager.GetRolesAsync(applicationUser);
+				var token = _tokenProvider.GenerateJwtToken(applicationUser, roles);
+				var refreshToken = _tokenProvider.GenerateRefreshToken(applicationUser.Id, cancellationToken);
+
+				return Ok(new { Token = token, RefreshToken = refreshToken.Result });
+			}
+			catch (Exception ex) 
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpPost("refresh-token")]
@@ -84,7 +91,7 @@ namespace HotelManagement.Web.Controllers
 		{
 			return new User
 			{				
-				Email = appUser.Email,			
+				Email = appUser.Email,
 			};
 		}
 	}
