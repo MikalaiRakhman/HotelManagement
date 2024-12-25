@@ -40,7 +40,7 @@ namespace HotelManagement.Web.Controllers
 
 			await _userManager.AddToRoleAsync(appUser, ApplicationRole.User.ToString());
 
-			await _context.Users.AddAsync(ConvertToDomainUser(appUser));
+			await _context.Users.AddAsync(ConvertToDomainUser(model));
 
 			await _context.SaveChangesAsync();
 
@@ -87,11 +87,11 @@ namespace HotelManagement.Web.Controllers
 			}
 		}
 
-		private User ConvertToDomainUser(ApplicationUser appUser)
+		private User ConvertToDomainUser(RegisterModel model)
 		{
 			return new User
 			{				
-				Email = appUser.Email,
+				Email = appUser.Email,			
 			};
 		}
 	}

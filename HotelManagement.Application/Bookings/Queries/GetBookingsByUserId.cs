@@ -33,7 +33,7 @@ namespace HotelManagement.Application.Bookings.Queries
 					Id = b.Id,
 					StartDate = b.StartDate,
 					EndDate = b.EndDate,
-					TotalPrice = b.TotalPrice					
+					TotalPrice = b.TotalPrice
 				}).ToListAsync(cancellationToken);
 
 			Guard.AgainstNull(entity, nameof(entity));
