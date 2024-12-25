@@ -22,6 +22,13 @@ namespace HotelManagement.Web.Controllers
 			_context = context;
 		}
 
+		/// <summary>
+		/// Register new user.
+		/// </summary>
+		/// <param name="model"></param>
+		/// <returns></returns>
+		/// <responce code="200">User registered successfully.</responce>
+		/// <response code="400">Error messege.</response>
 		[HttpPost("register")]
 		public async Task<IActionResult> Register([FromBody] RegisterModel model)
 		{
@@ -39,14 +46,20 @@ namespace HotelManagement.Web.Controllers
 			}
 
 			await _userManager.AddToRoleAsync(appUser, ApplicationRole.User.ToString());
-
 			await _context.Users.AddAsync(ConvertToDomainUser(model));
-
 			await _context.SaveChangesAsync();
 
 			return Ok(new { Message = "User registered successfully!" });
 		}
 
+		/// <summary>
+		/// Login user
+		/// </summary>
+		/// <param name="model"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
+		/// <response code="400">Error messege.</response>
+		/// <responce code="200">Acces-token and refresh-token.</responce>
 		[HttpPost("login")]
 		public async Task<IActionResult> Login([FromBody] LoginModel model, CancellationToken cancellationToken)
 		{
@@ -72,6 +85,14 @@ namespace HotelManagement.Web.Controllers
 			}
 		}
 
+		/// <summary>
+		/// New refresh-token and acces-token.
+		/// </summary>
+		/// <param name="model"></param>
+		/// <param name="cancellationToken"></param>
+		/// <response code="401">Error messege.</response>
+		/// <responce code="200">New acces-token and refresh-token.</responce>
+		/// <returns>New refresh-token and acces-token.</returns>
 		[HttpPost("refresh-token")]
 		public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenModel model, CancellationToken cancellationToken)
 		{
@@ -91,7 +112,10 @@ namespace HotelManagement.Web.Controllers
 		{
 			return new User
 			{				
-				Email = appUser.Email,			
+				Email = model.Email,
+				FirstName = model.FirstName,
+				LastName = model.LastName,
+				PhoneNumer = model.PhoneNumber,
 			};
 		}
 	}
