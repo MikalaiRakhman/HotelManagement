@@ -28,7 +28,7 @@ namespace HotelManagement.Application.Users.Commands
 
 			entity.FirstName = request.FirstName;
 			entity.LastName = request.LastName;
-			entity.PhoneNumer = request.PhoneNumber;
+			entity.PhoneNumber = request.PhoneNumber;
 
 			await _context.SaveChangesAsync(cancellationToken);
 		}

@@ -25,7 +25,7 @@ namespace HotelManagement.Application.Users.Queries
 				FirstName = u.FirstName,
 				LastName = u.LastName,
 				Email = u.Email,
-				PhoneNumber = u.PhoneNumer,
+				PhoneNumber = u.PhoneNumber,
 			}).ToListAsync(cancellationToken);
 		}
 	}

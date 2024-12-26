@@ -115,7 +115,7 @@ namespace HotelManagement.Web.Controllers
 				Email = model.Email,
 				FirstName = model.FirstName,
 				LastName = model.LastName,
-				PhoneNumer = model.PhoneNumber,
+				PhoneNumber = model.PhoneNumber,
 			};
 		}
 	}
