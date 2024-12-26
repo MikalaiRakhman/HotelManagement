@@ -71,7 +71,7 @@ namespace HotelManagement.Infrastructure.Identity
 		{
 			var storedToken = _context.RefreshTokens.FirstOrDefault(rt => rt.Token == refreshToken);
 
-			if (storedToken == null || storedToken.Expires < DateTime.UtcNow) 
+			if (storedToken == null || storedToken.Expires < DateTime.UtcNow)
 			{
 				throw new UnauthorizedAccessException("The provided refresh token is either invalid or has expired. Please authenticate again to obtain a new token.");
 			}

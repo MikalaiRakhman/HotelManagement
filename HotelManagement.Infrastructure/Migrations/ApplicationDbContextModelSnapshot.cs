@@ -102,7 +102,7 @@ namespace HotelManagement.Infrastructure.Migrations
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
-
+                        
                     b.Property<string>("PhoneNumer")
                         .HasColumnType("nvarchar(max)");
 
