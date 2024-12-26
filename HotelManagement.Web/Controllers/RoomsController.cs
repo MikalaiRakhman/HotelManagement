@@ -3,10 +3,12 @@ using HotelManagement.Application.Rooms.Commands;
 using HotelManagement.Application.Rooms.Queries;
 using HotelManagement.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Web.Controllers
 {
+	[Authorize("Admin")]
 	[Route("api/[controller]")]
 	[ApiController]
     public class RoomsController : Controller

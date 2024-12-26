@@ -28,7 +28,7 @@ builder.Services.AddSwaggerGen(options =>
 		In = ParameterLocation.Header,
 		Description = "Enter the JWT token using the Bearer scheme.",
 		Name = "Authorization",
-		Type = SecuritySchemeType.ApiKey,
+		Type = SecuritySchemeType.Http,
 		Scheme = "Bearer"
 	});
 

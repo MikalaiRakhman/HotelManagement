@@ -7,7 +7,8 @@ namespace HotelManagement.Application.Users.Commands
 	{
 		public Guid Id { get; init; }
 		public string FirstName { get; init; }
-		public string LastName { get; init; }		
+		public string LastName { get; init; }
+		public string PhoneNumber { get; init; }
 	}
 
 	public class UpdateUserHandler : IRequestHandler<UpdateUser>
@@ -26,7 +27,8 @@ namespace HotelManagement.Application.Users.Commands
 			Guard.AgainstNull(entity, nameof(entity));
 
 			entity.FirstName = request.FirstName;
-			entity.LastName = request.LastName;			
+			entity.LastName = request.LastName;
+			entity.PhoneNumber = request.PhoneNumber;
 
 			await _context.SaveChangesAsync(cancellationToken);
 		}
