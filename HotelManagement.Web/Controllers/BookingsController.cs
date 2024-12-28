@@ -24,8 +24,7 @@ namespace HotelManagement.Web.Controllers
 		/// Get all bookings.
 		/// </summary>
 		/// <returns>A list of bookings.</returns>
-		/// <responce code="200">Returns the list of project.</responce>
-		/// <responce code="404">If no bookings are found.</responce>
+		/// <responce code="200">Returns the list of bookings.</responce>		
 		[HttpGet]
 		public async Task<ActionResult<List<Booking>>> GetAllBookings()
 		{
@@ -34,7 +33,7 @@ namespace HotelManagement.Web.Controllers
 
 			if (bookings is null or [])
 			{
-				return NotFound("No bookings found!");
+				return Ok("There are no bookings in the database.");
 			}
 
 			return Ok(bookings);

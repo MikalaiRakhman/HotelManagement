@@ -29,7 +29,6 @@ namespace HotelManagement.Web.Controllers
 		/// <returns></returns>
 		/// <responce code="200">User registered successfully.</responce>
 		/// <response code="400">Error messege.</response>
-
 		[HttpPost("register")]
 		public async Task<IActionResult> Register([FromBody] RegisterModel model)
 		{

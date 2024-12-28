@@ -124,16 +124,23 @@ namespace HotelManagement.Web.Controllers
 			
 			await _mediator.Send(command);
 
-			var user = await _context.Users.FindAsync(id);
-			Guard.AgainstNull(user, nameof(user));
-			var userEmail = user.Email;
+			try
+			{
+				var user = await _context.Users.FindAsync(id);
+				Guard.AgainstNull(user, nameof(user));
+				var userEmail = user.Email;
 
-			var applicationUser = await _userManager.FindByEmailAsync(userEmail);
-			Guard.AgainstNull(applicationUser, nameof(applicationUser));
+				var applicationUser = await _userManager.FindByEmailAsync(userEmail);
+				Guard.AgainstNull(applicationUser, nameof(applicationUser));
 
-			await _userManager.UpdateAsync(applicationUser);
+				await _userManager.UpdateAsync(applicationUser);
+			}
+			catch (Exception ex) 
+			{
+				return BadRequest(ex.Message);
+			}
 
-			return NoContent();			
+			return NoContent();
 		}
 	}
 }
