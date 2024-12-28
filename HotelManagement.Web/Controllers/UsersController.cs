@@ -1,7 +1,8 @@
-﻿using HotelManagement.Application.Bookings.Queries;
+﻿using HotelManagement.Application.Bookings.Queries.GetBookingsByUserId;
 using HotelManagement.Application.Common;
-using HotelManagement.Application.Users.Commands;
-using HotelManagement.Application.Users.Queries;
+using HotelManagement.Application.Users.Commands.DeleteUser;
+using HotelManagement.Application.Users.Commands.UpdateUser;
+using HotelManagement.Application.Users.Queries.GetAllUsers;
 using HotelManagement.Domain.Entities;
 using HotelManagement.Infrastructure.Identity;
 using MediatR;
@@ -36,7 +37,7 @@ namespace HotelManagement.Web.Controllers
 		[Authorize(Roles = "Admin")]
 		public async Task<ActionResult<List<User>>> GetAllUsers()
 		{
-			var query = new GetAllUsers();
+			var query = new GetAllUsersQuery();
 			var users = await _mediator.Send(query);
 
 			if (users is null or [])
@@ -58,7 +59,7 @@ namespace HotelManagement.Web.Controllers
 		[HttpGet("{userId}/bookings")]
 		public async Task<ActionResult> GetBookingsByUserId(Guid userId)
 		{
-			var query = new GetBookingsByUserId(userId);
+			var query = new GetBookingsByUserIdQuery(userId);
 			var result = await _mediator.Send(query);
 
 			if(result is null or [])
@@ -89,7 +90,7 @@ namespace HotelManagement.Web.Controllers
 				var applicationUser = await _userManager.FindByEmailAsync(user.Email);
 				Guard.AgainstNull(applicationUser, nameof(applicationUser));
 
-				var command = new DeleteUser(id);
+				var command = new DeleteUserCommand(id);
 
 				await _mediator.Send(command);
 				await _userManager.DeleteAsync(applicationUser);
@@ -114,7 +115,7 @@ namespace HotelManagement.Web.Controllers
 		/// <responce code="400">One or more errors have occured.</responce>
 		[Authorize(Roles = "Admin")]
 		[HttpPut("{id:guid}")]		
-		public async Task<ActionResult> UpdateUser(Guid id, [FromBody] UpdateUser command)
+		public async Task<ActionResult> UpdateUser(Guid id, [FromBody] UpdateUserCommand command)
 		{
 			if (id != command.Id)
 			{

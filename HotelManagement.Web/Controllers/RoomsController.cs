@@ -1,6 +1,8 @@
-﻿using HotelManagement.Application.Bookings.Queries;
-using HotelManagement.Application.Rooms.Commands;
-using HotelManagement.Application.Rooms.Queries;
+﻿using HotelManagement.Application.Bookings.Queries.GetBookingsByRoomId;
+using HotelManagement.Application.Rooms.Commands.Create;
+using HotelManagement.Application.Rooms.Commands.Delete;
+using HotelManagement.Application.Rooms.Commands.Update;
+using HotelManagement.Application.Rooms.Queries.GetAllRooms;
 using HotelManagement.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -28,7 +30,7 @@ namespace HotelManagement.Web.Controllers
 		[HttpGet]
 		public async Task<ActionResult<List<Room>>> GetAllRooms()
 		{
-			var query = new GetAllRooms();
+			var query = new GetAllRoomsQuery();
 			var rooms = await _mediator.Send(query);
 
 			if (rooms is null or [])
@@ -49,7 +51,7 @@ namespace HotelManagement.Web.Controllers
 		[HttpGet("{roomId}/bookings")]
 		public async Task<ActionResult> GetBookingsByRoomId(Guid roomId)
 		{
-			var query = new GetBookingsByRoomId(roomId);
+			var query = new GetBookingsByRoomIdQuery(roomId);
 			var result = await _mediator.Send(query);
 
 			if (result is null or [])
@@ -69,7 +71,7 @@ namespace HotelManagement.Web.Controllers
 		/// <responce code="200">Create new room.</responce>
 		/// <responce code="400">One or more errors have occured.</responce>
 		[HttpPost]
-		public async Task<ActionResult<Guid>> CreateRoom([FromBody] CreateRoom command)
+		public async Task<ActionResult<Guid>> CreateRoom([FromBody] CreateRoomCommand command)
 		{
 			var roomId = await _mediator.Send(command);
 
@@ -78,7 +80,7 @@ namespace HotelManagement.Web.Controllers
 				return BadRequest("An arror occured!");
 			}
 
-			return Ok(roomId);			
+			return Ok(roomId);
 		}
 
 
@@ -94,7 +96,7 @@ namespace HotelManagement.Web.Controllers
 		{
 			try
 			{
-				var command = new DeleteRoom(id);
+				var command = new DeleteRoomCommand(id);
 
 				await _mediator.Send(command);
 
@@ -102,8 +104,8 @@ namespace HotelManagement.Web.Controllers
 			}
 			catch (Exception ex) 
 			{
-				return BadRequest(ex.Message);	
-			}			
+				return BadRequest(ex.Message);
+			}
 		}
 
 
@@ -116,7 +118,7 @@ namespace HotelManagement.Web.Controllers
 		/// <responce code="400">One or more errors have occured.</responce>
 		/// <responce code="204">Room udated.</responce>
 		[HttpPut("{id:guid}")]
-		public async Task<ActionResult> UpdateRoom(Guid id, [FromBody] UpdateRoom command)
+		public async Task<ActionResult> UpdateRoom(Guid id, [FromBody] UpdateRoomCommand command)
 		{
 			if (id != command.Id)
 			{
@@ -125,7 +127,7 @@ namespace HotelManagement.Web.Controllers
 
 			await _mediator.Send(command);
 
-			return NoContent();			
+			return NoContent();
 		}
 	}
 }

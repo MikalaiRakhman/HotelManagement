@@ -1,5 +1,8 @@
-﻿using HotelManagement.Application.Bookings.Commands;
-using HotelManagement.Application.Bookings.Queries;
+﻿using HotelManagement.Application.Bookings.Commands.Create;
+using HotelManagement.Application.Bookings.Commands.Delete;
+using HotelManagement.Application.Bookings.Commands.Update;
+using HotelManagement.Application.Bookings.Queries.GetAllBookings;
+using HotelManagement.Application.Bookings.Queries.GetBookingDetails;
 using HotelManagement.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +29,7 @@ namespace HotelManagement.Web.Controllers
 		[HttpGet]
 		public async Task<ActionResult<List<Booking>>> GetAllBookings()
 		{
-			var query = new GetAllBookings();
+			var query = new GetAllBookingsQuery();
 			var bookings = await _mediator.Send(query);
 
 			if (bookings is null or [])
@@ -49,7 +52,7 @@ namespace HotelManagement.Web.Controllers
 		{
 			try
 			{
-				var query = new GetBookingDetails(bookingId);
+				var query = new GetBookingDetailsQuery(bookingId);
 				var result = await _mediator.Send(query);
 
 				if (result is null)
@@ -74,7 +77,7 @@ namespace HotelManagement.Web.Controllers
 		/// <responce code="200">Return booking Id.</responce>
 		/// <recponce code="400">One or more errors occurred.</recponce>
 		[HttpPost]		
-		public async Task<ActionResult<Guid>> CreateBooking([FromBody] CreateBooking command)
+		public async Task<ActionResult<Guid>> CreateBooking([FromBody] CreateBookingCommand command)
 		{
 			try
 			{
@@ -103,7 +106,7 @@ namespace HotelManagement.Web.Controllers
 		[HttpDelete("{id:guid}")]
 		public async Task<ActionResult> DeleteBooking(Guid id)
 		{
-			var command = new DeleteBooking(id);
+			var command = new DeleteBookingCommand(id);
 
 			try
 			{
@@ -126,7 +129,7 @@ namespace HotelManagement.Web.Controllers
 		/// <responce code="404">Booking Id in URL does not match with Id in command.</responce>
 		/// <responce code="400">Entity id was not found.</responce>
 		[HttpPut("{id:guid}")]
-		public async Task<ActionResult> UpdateBooking(Guid id, [FromBody] UpdateBooking command)
+		public async Task<ActionResult> UpdateBooking(Guid id, [FromBody] UpdateBookingCommand command)
 		{
 			try
 			{
