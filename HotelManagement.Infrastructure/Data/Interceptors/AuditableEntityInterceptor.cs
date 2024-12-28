@@ -47,9 +47,9 @@ namespace HotelManagement.Infrastructure.Data.Interceotors
 					}
 
 					entry.Entity.LastModifiedAt = utsNow.DateTime;
-				}				
-			}			
-		}		
+				}
+			}
+		}
 	}
 
 	public static class Extensions

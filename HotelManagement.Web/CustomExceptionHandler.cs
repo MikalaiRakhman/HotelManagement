@@ -19,7 +19,7 @@ namespace HotelManagement.Web
 		{
 			var exceptionType = exception.GetType();
 
-			if (_exceptionHandlers.ContainsKey(exceptionType)) 
+			if (_exceptionHandlers.ContainsKey(exceptionType))
 			{
 				await _exceptionHandlers[exceptionType].Invoke(httpContext, exception);
 				return true;
