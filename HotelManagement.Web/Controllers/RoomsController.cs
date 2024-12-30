@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Web.Controllers
 {
-	[Authorize("Admin")]
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
     public class RoomsController : Controller
@@ -26,7 +26,8 @@ namespace HotelManagement.Web.Controllers
 		/// Get all rooms.
 		/// </summary>
 		/// <returns>All rooms.</returns>
-		/// <responce code="200">Return list of rooms</responce>		
+		/// <responce code="200">Return list of rooms</responce>	
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
 		public async Task<ActionResult<List<Room>>> GetAllRooms()
 		{
@@ -48,6 +49,7 @@ namespace HotelManagement.Web.Controllers
 		/// <returns>List of bookings.</returns>
 		/// <responce code="200">Return list of booking.</responce>
 		/// <responce code="404">Not found.</responce>
+		[Authorize(Roles = "Admin, Manager")]
 		[HttpGet("{roomId}/bookings")]
 		public async Task<ActionResult> GetBookingsByRoomId(Guid roomId)
 		{
@@ -70,6 +72,7 @@ namespace HotelManagement.Web.Controllers
 		/// <returns>Room id</returns>
 		/// <responce code="200">Create new room.</responce>
 		/// <responce code="400">One or more errors have occured.</responce>
+		[Authorize(Roles = "Admin, Manager")]
 		[HttpPost]
 		public async Task<ActionResult<Guid>> CreateRoom([FromBody] CreateRoomCommand command)
 		{
@@ -91,6 +94,7 @@ namespace HotelManagement.Web.Controllers
 		/// <returns>No content.</returns>
 		/// <responce code="200">No content.</responce>
 		/// <responce code="400">Room with id was not found.</responce>
+		[Authorize(Roles = "Admin")]
 		[HttpDelete("{id:guid}")]
 		public async Task<ActionResult> DeleteRoom (Guid id)
 		{
@@ -117,6 +121,7 @@ namespace HotelManagement.Web.Controllers
 		/// <returns></returns>
 		/// <responce code="400">One or more errors have occured.</responce>
 		/// <responce code="204">Room udated.</responce>
+		[Authorize(Roles = "Admin, Manager")]
 		[HttpPut("{id:guid}")]
 		public async Task<ActionResult> UpdateRoom(Guid id, [FromBody] UpdateRoomCommand command)
 		{

@@ -55,7 +55,7 @@ namespace HotelManagement.Web.Controllers
 		/// <returns>Get bookings of specific user/</returns>
 		/// <responce code="404">Not found/</responce>
 		/// <responce code="200">Bookings list/</responce>
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, Manager")]
 		[HttpGet("{userId}/bookings")]
 		public async Task<ActionResult> GetBookingsByUserId(Guid userId)
 		{
@@ -113,7 +113,7 @@ namespace HotelManagement.Web.Controllers
 		/// <returns></returns>
 		/// <responce code="200">No content.</responce>
 		/// <responce code="400">One or more errors have occured.</responce>
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, Manager")]
 		[HttpPut("{id:guid}")]		
 		public async Task<ActionResult> UpdateUser(Guid id, [FromBody] UpdateUserCommand command)
 		{
