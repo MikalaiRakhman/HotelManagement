@@ -19,6 +19,11 @@ namespace HotelManagement.Application.Bookings.Commands.Create
 			Guard.AgainstNullOrEmpty(request.UserId, nameof(request.UserId));
 			Guard.AgainstNullOrEmpty(request.RoomId, nameof(request.RoomId));
 
+			if (request.StartDate < DateOnly.FromDateTime(DateTime.UtcNow))
+			{
+				throw new Exception("The booking day cannot be before the current day.");
+			}
+
 			if (await CheckRoomAvailibilityAsync(request.RoomId, request.StartDate, request.EndDate))
 			{
 				var user = await _context.Users.FindAsync(request.UserId);
