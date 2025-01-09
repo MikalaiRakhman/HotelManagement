@@ -10,6 +10,16 @@ builder.Host.UseSerilog();
 builder.Services.AddSerilogLogging();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddCors(options =>
+	options.AddPolicy("AllowFrontendApp", policy =>
+	{
+		policy.WithOrigins("http://localhost:4200")
+		.AllowAnyMethod()
+		.AllowAnyHeader();
+	})
+);
+
 builder.Services.AddSwagger();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
@@ -26,6 +36,7 @@ if (app.Environment.IsDevelopment())
 	{
 		c.SwaggerEndpoint("/swagger/v1/swagger.json", "HotelManagement V1");
 	});
+	app.UseCors("AllowFrontendApp");
 }
 
 app.UseHttpsRedirection();
