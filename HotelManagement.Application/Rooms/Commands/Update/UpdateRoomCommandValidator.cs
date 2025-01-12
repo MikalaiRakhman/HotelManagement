@@ -17,9 +17,7 @@ namespace HotelManagement.Application.Rooms.Commands.Update
 				.NotEmpty()
 				.WithMessage("Room number is required.")
 				.GreaterThan(0)
-				.WithMessage("Room number must be greater than 0.")
-				.MustAsync(BeUniqueRoomNumber)
-				.WithMessage("Room number is already exist. Room number should be unique.");
+				.WithMessage("Room number must be greater than 0.");				
 
 			RuleFor(r => r.RoomType)
 				.NotEmpty()
