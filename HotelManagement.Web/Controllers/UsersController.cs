@@ -82,24 +82,16 @@ namespace HotelManagement.Web.Controllers
 		[HttpDelete("{id:guid}")]
 		public async Task<ActionResult> DeleteUser(Guid id)
 		{
-			try
-			{
-				var user = await _context.Users.FindAsync(id);
-				Guard.AgainstNull(user, nameof(user));
+			var user = await _context.Users.FindAsync(id);
+			Guard.AgainstNull(user, nameof(user));
 
-				var applicationUser = await _userManager.FindByEmailAsync(user.Email);
-				Guard.AgainstNull(applicationUser, nameof(applicationUser));
+			var applicationUser = await _userManager.FindByEmailAsync(user.Email);
+			Guard.AgainstNull(applicationUser, nameof(applicationUser));
 
-				var command = new DeleteUserCommand(id);
+			var command = new DeleteUserCommand(id);
 
-				await _mediator.Send(command);
-				await _userManager.DeleteAsync(applicationUser);
-				
-			}
-			catch (Exception ex) 
-			{
-				return BadRequest(ex.Message);
-			}
+			await _mediator.Send(command);
+			await _userManager.DeleteAsync(applicationUser);
 
 			return NoContent();
 		}
@@ -123,22 +115,15 @@ namespace HotelManagement.Web.Controllers
 			}
 			
 			await _mediator.Send(command);
+			
+			var user = await _context.Users.FindAsync(id);
+			Guard.AgainstNull(user, nameof(user));
 
-			try
-			{
-				var user = await _context.Users.FindAsync(id);
-				Guard.AgainstNull(user, nameof(user));
-				var userEmail = user.Email;
+			var userEmail = user.Email;
+			var applicationUser = await _userManager.FindByEmailAsync(userEmail);
+			Guard.AgainstNull(applicationUser, nameof(applicationUser));
 
-				var applicationUser = await _userManager.FindByEmailAsync(userEmail);
-				Guard.AgainstNull(applicationUser, nameof(applicationUser));
-
-				await _userManager.UpdateAsync(applicationUser);
-			}
-			catch (Exception ex) 
-			{
-				return BadRequest(ex.Message);
-			}
+			await _userManager.UpdateAsync(applicationUser);
 
 			return NoContent();
 		}

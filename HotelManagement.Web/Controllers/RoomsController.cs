@@ -26,7 +26,7 @@ namespace HotelManagement.Web.Controllers
 		/// Get all rooms.
 		/// </summary>
 		/// <returns>All rooms.</returns>
-		/// <responce code="200">Return list of rooms</responce>	
+		/// <responce code="200">Return list of rooms</responce>
 		//[Authorize(Roles = "Admin")]
 		[HttpGet]
 		public async Task<ActionResult<List<Room>>> GetAllRooms()
@@ -97,19 +97,12 @@ namespace HotelManagement.Web.Controllers
 		//[Authorize(Roles = "Admin")]
 		[HttpDelete("{id:guid}")]
 		public async Task<ActionResult> DeleteRoom (Guid id)
-		{
-			try
-			{
-				var command = new DeleteRoomCommand(id);
+		{			
+			var command = new DeleteRoomCommand(id);
 
-				await _mediator.Send(command);
+			await _mediator.Send(command);
 
-				return NoContent();
-			}
-			catch (Exception ex) 
-			{
-				return BadRequest(ex.Message);
-			}
+			return NoContent();
 		}
 
 

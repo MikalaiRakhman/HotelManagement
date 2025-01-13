@@ -1,6 +1,7 @@
 using HotelManagement.Application;
 using HotelManagement.Infrastructure.Data;
 using HotelManagement.Web;
+using HotelManagement.Web.Filters;
 using Microsoft.Extensions;
 using Serilog;
 
@@ -8,7 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog();
 builder.Services.AddSerilogLogging();
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+	options.Filters.Add<ExceptionFilter>();
+});
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddCors(options =>

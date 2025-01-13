@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Web.Controllers
 {
-	[Authorize]
+	//[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class BookingsController : Controller
@@ -19,7 +19,7 @@ namespace HotelManagement.Web.Controllers
 		
 		public BookingsController(IMediator mediator)
 		{
-			_mediator = mediator;			
+			_mediator = mediator;
 		}
 
 		/// <summary>
@@ -27,7 +27,7 @@ namespace HotelManagement.Web.Controllers
 		/// </summary>
 		/// <returns>A list of bookings.</returns>
 		/// <responce code="200">Returns the list of bookings.</responce>
-		[Authorize(Roles = "Admin")]
+		//[Authorize(Roles = "Admin")]
 		[HttpGet]
 		public async Task<ActionResult<List<Booking>>> GetAllBookings()
 		{
@@ -49,26 +49,19 @@ namespace HotelManagement.Web.Controllers
 		/// <returns>Booking details.</returns>
 		/// <responce code="200">Returns booking details.</responce>
 		/// <responce code="400">Returns message about problem.</responce>
-		[Authorize(Roles = "Admin, Manager")]
+		//[Authorize(Roles = "Admin, Manager")]
 		[HttpGet("{bookingId:guid}")]
 		public async Task<ActionResult> GetBookingDetails(Guid bookingId)
-		{
-			try
+		{			
+			var query = new GetBookingDetailsQuery(bookingId);
+			var result = await _mediator.Send(query);
+
+			if (result is null)
 			{
-				var query = new GetBookingDetailsQuery(bookingId);
-				var result = await _mediator.Send(query);
-
-				if (result is null)
-				{
-					return NotFound();
-				}
-
-				return Ok(result);
+				return NotFound();
 			}
-			catch (Exception ex) 
-			{
-				return BadRequest(ex.Message);
-			}			
+
+			return Ok(result);
 		}
 
 
@@ -79,25 +72,18 @@ namespace HotelManagement.Web.Controllers
 		/// <returns>The ID of the newly created booking.</returns>
 		/// <responce code="200">Return booking Id.</responce>
 		/// <recponce code="400">One or more errors occurred.</recponce>
-		[Authorize(Roles = "Admin, Manager, User")]
+		//[Authorize(Roles = "Admin, Manager, User")]
 		[HttpPost]		
 		public async Task<ActionResult<Guid>> CreateBooking([FromBody] CreateBookingCommand command)
 		{
-			try
+			var bookingId = await _mediator.Send(command);
+
+			if (bookingId == Guid.Empty)
 			{
-				var bookingId = await _mediator.Send(command);
-
-				if (bookingId == Guid.Empty)
-				{
-					return BadRequest("An arror occured!");
-				}
-
-				return Ok(bookingId);
+				return BadRequest("An arror occured!");
 			}
-			catch (Exception ex) 
-			{
-				return BadRequest(ex.Message);
-			}		
+
+			return Ok(bookingId);
 		}
 
 		/// <summary>
@@ -107,22 +93,15 @@ namespace HotelManagement.Web.Controllers
 		/// <returns>OK.</returns>
 		/// <response code="200">Returns OK</response>
 		/// <response code="404">Entity with id not found</response>
-		[Authorize(Roles = "Admin, Manager")]
+		//[Authorize(Roles = "Admin, Manager")]
 		[HttpDelete("{id:guid}")]
 		public async Task<ActionResult> DeleteBooking(Guid id)
 		{
 			var command = new DeleteBookingCommand(id);
+			
+			await _mediator.Send(command);
 
-			try
-			{
-				await _mediator.Send(command);
-
-				return NoContent();
-			}
-			catch (Exception ex) 
-			{
-				return NotFound(ex.Message);
-			}
+			return NoContent();
 		}
 
 		/// <summary>
@@ -133,25 +112,18 @@ namespace HotelManagement.Web.Controllers
 		/// <returns></returns>
 		/// <responce code="404">Booking Id in URL does not match with Id in command.</responce>
 		/// <responce code="400">Entity id was not found.</responce>
-		[Authorize(Roles = "Admin, Manager")]
+		//[Authorize(Roles = "Admin, Manager")]
 		[HttpPut("{id:guid}")]
 		public async Task<ActionResult> UpdateBooking(Guid id, [FromBody] UpdateBookingCommand command)
 		{
-			try
+			if (id != command.Id)
 			{
-				if (id != command.Id)
-				{
-					return BadRequest("Booking Id in URL does not match with Id in command");
-				}
-
-				await _mediator.Send(command);
-
-				return NoContent();
+				return BadRequest("Booking Id in URL does not match with Id in command");
 			}
-			catch (Exception ex) 
-			{
-				return BadRequest(ex.Message);
-			}
+
+			await _mediator.Send(command);
+
+			return NoContent();
 		}		
 	}
 }
