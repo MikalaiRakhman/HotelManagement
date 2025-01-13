@@ -37,7 +37,7 @@ namespace HotelManagement.Application.Rooms.Commands.Update
 
 		private async Task<bool> BeUniqueRoomNumber(int roomNumber, CancellationToken cancellationToken)
 		{
-			return !await _context.Rooms.AnyAsync(r => r.RoomNumber == roomNumber, cancellationToken);
+			return await _context.Rooms.AnyAsync(r => r.RoomNumber == roomNumber, cancellationToken);
 		}
 	}
 }
