@@ -49,7 +49,7 @@ namespace HotelManagement.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", (string)null);
                 });
 
             modelBuilder.Entity("HotelManagement.Domain.Entities.Room", b =>
@@ -78,7 +78,7 @@ namespace HotelManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
                 });
 
             modelBuilder.Entity("HotelManagement.Domain.Entities.User", b =>
@@ -102,13 +102,13 @@ namespace HotelManagement.Infrastructure.Migrations
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
-                        
+
                     b.Property<string>("PhoneNumer")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("HotelManagement.Infrastructure.Identity.ApplicationUser", b =>
@@ -200,7 +200,7 @@ namespace HotelManagement.Infrastructure.Migrations
                     b.HasIndex("Token")
                         .IsUnique();
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>

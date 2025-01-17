@@ -13,12 +13,12 @@ namespace HotelManagement.Web.Models
 		public string Password { get; set; }
 
 		[Required(ErrorMessage = "Firstname is requared.")]
-		[StringLength(30, ErrorMessage = "First name cannot be longer than 50 characters.")]
+		[StringLength(30, ErrorMessage = "First name cannot be longer than 30 characters.")]
 		[RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "First name can only contain letters.")]
 		public string FirstName { get; set; }
 
 		[Required(ErrorMessage = "Lastname is requared.")]
-		[StringLength(30, ErrorMessage = "Last name cannot be longer than 50 characters.")]
+		[StringLength(30, ErrorMessage = "Last name cannot be longer than 30 characters.")]
 		[RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Last name can only contain letters.")]
 		public string LastName { get; set; }
 

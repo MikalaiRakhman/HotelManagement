@@ -23,7 +23,7 @@ namespace HotelManagement.Application.Rooms.Commands.Update
 			{
 				if (await BeUniqueRoomNumber(request.RoomNumber, cancellationToken))
 				{
-					throw new ValidationException("Room number is already exist. Room number should be unique.");
+					throw new ValidationException("Room number already exists. Room number should be unique.");
 				}
 			}
 
