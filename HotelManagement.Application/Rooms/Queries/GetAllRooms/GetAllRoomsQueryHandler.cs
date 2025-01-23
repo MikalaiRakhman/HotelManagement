@@ -46,6 +46,12 @@ namespace HotelManagement.Application.Rooms.Queries.GetAllRooms
 
 					room.IsAvailable = false;
 				}
+				else
+				{
+					var room = await _context.Rooms.FindAsync(booking.RoomId, cancellationToken);
+
+					room.IsAvailable = true;
+				}
 			}
 
 			_context.SaveChangesAsync(cancellationToken);

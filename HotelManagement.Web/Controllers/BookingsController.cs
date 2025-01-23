@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Web.Controllers
 {
-	//[Authorize]
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class BookingsController : Controller
@@ -26,8 +26,7 @@ namespace HotelManagement.Web.Controllers
 		/// Get all bookings.
 		/// </summary>
 		/// <returns>A list of bookings.</returns>
-		/// <responce code="200">Returns the list of bookings.</responce>
-		//[Authorize(Roles = "Admin")]
+		/// <responce code="200">Returns the list of bookings.</responce>		
 		[HttpGet]
 		public async Task<ActionResult<List<Booking>>> GetAllBookings()
 		{
@@ -48,8 +47,7 @@ namespace HotelManagement.Web.Controllers
 		/// <param name="bookingId"></param>
 		/// <returns>Booking details.</returns>
 		/// <responce code="200">Returns booking details.</responce>
-		/// <responce code="400">Returns message about problem.</responce>
-		//[Authorize(Roles = "Admin, Manager")]
+		/// <responce code="400">Returns message about problem.</responce>		
 		[HttpGet("{bookingId:guid}")]
 		public async Task<ActionResult> GetBookingDetails(Guid bookingId)
 		{			
@@ -72,7 +70,7 @@ namespace HotelManagement.Web.Controllers
 		/// <returns>The ID of the newly created booking.</returns>
 		/// <responce code="200">Return booking Id.</responce>
 		/// <recponce code="400">One or more errors occurred.</recponce>
-		//[Authorize(Roles = "Admin, Manager, User")]
+		[Authorize(Roles = "Admin, Manager, User")]
 		[HttpPost]		
 		public async Task<ActionResult<Guid>> CreateBooking([FromBody] CreateBookingCommand command)
 		{
@@ -80,7 +78,7 @@ namespace HotelManagement.Web.Controllers
 
 			if (bookingId == Guid.Empty)
 			{
-				return BadRequest("An arror occured!");
+				return Ok("An arror occured!");
 			}
 
 			return Ok(bookingId);
@@ -93,7 +91,7 @@ namespace HotelManagement.Web.Controllers
 		/// <returns>OK.</returns>
 		/// <response code="200">Returns OK</response>
 		/// <response code="404">Entity with id not found</response>
-		//[Authorize(Roles = "Admin, Manager")]
+		[Authorize(Roles = "Admin, Manager")]
 		[HttpDelete("{id:guid}")]
 		public async Task<ActionResult> DeleteBooking(Guid id)
 		{
@@ -112,13 +110,13 @@ namespace HotelManagement.Web.Controllers
 		/// <returns></returns>
 		/// <responce code="404">Booking Id in URL does not match with Id in command.</responce>
 		/// <responce code="400">Entity id was not found.</responce>
-		//[Authorize(Roles = "Admin, Manager")]
+		[Authorize(Roles = "Admin, Manager")]
 		[HttpPut("{id:guid}")]
 		public async Task<ActionResult> UpdateBooking(Guid id, [FromBody] UpdateBookingCommand command)
 		{
 			if (id != command.Id)
 			{
-				return BadRequest("Booking Id in URL does not match with Id in command");
+				return Ok("Booking Id in URL does not match with Id in command");
 			}
 
 			await _mediator.Send(command);

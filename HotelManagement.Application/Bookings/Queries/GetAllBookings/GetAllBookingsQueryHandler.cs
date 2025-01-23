@@ -22,7 +22,9 @@ namespace HotelManagement.Application.Bookings.Queries.GetAllBookings
 					Id = b.Id,
 					StartDate = b.StartDate,
 					EndDate = b.EndDate,
-					TotalPrice = b.TotalPrice
+					TotalPrice = b.TotalPrice,
+					BookerEmail = b.User.Email,
+					RoomNumber = b.Room.RoomNumber
 				}).ToListAsync(cancellationToken);
 		}
 	}

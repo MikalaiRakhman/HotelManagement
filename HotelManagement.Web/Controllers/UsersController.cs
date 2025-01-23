@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Web.Controllers
 {
-	//[Authorize]
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class UsersController : Controller
@@ -33,8 +33,7 @@ namespace HotelManagement.Web.Controllers
 		/// </summary>
 		/// <returns>List of users.</returns>
 		/// <responce code="200">Return list of users.</responce>
-		[HttpGet]
-		//[Authorize(Roles = "Admin")]
+		[HttpGet]		
 		public async Task<ActionResult<List<User>>> GetAllUsers()
 		{
 			var query = new GetAllUsersQuery();
@@ -54,8 +53,7 @@ namespace HotelManagement.Web.Controllers
 		/// <param name="userId">User id/</param>
 		/// <returns>Get bookings of specific user/</returns>
 		/// <responce code="404">Not found/</responce>
-		/// <responce code="200">Bookings list/</responce>
-		//[Authorize(Roles = "Admin, Manager")]
+		/// <responce code="200">Bookings list/</responce>		
 		[HttpGet("{userId}/bookings")]
 		public async Task<ActionResult> GetBookingsByUserId(Guid userId)
 		{
@@ -78,7 +76,7 @@ namespace HotelManagement.Web.Controllers
 		/// <returns>OK.</returns>
 		/// <responce code="200">No content.</responce>
 		/// <response code="404">User with id was not found.</response>
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpDelete("{id:guid}")]
 		public async Task<ActionResult> DeleteUser(Guid id)
 		{
@@ -104,8 +102,7 @@ namespace HotelManagement.Web.Controllers
 		/// <param name="command">User details.</param>
 		/// <returns></returns>
 		/// <responce code="200">No content.</responce>
-		/// <responce code="400">One or more errors have occured.</responce>
-		//[Authorize(Roles = "Admin, Manager")]
+		/// <responce code="400">One or more errors have occured.</responce>		
 		[HttpPut("{id:guid}")]		
 		public async Task<ActionResult> UpdateUser(Guid id, [FromBody] UpdateUserCommand command)
 		{
