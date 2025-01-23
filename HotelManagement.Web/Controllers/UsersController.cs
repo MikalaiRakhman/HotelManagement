@@ -1,7 +1,8 @@
-﻿using HotelManagement.Application.Bookings.Queries;
+﻿using HotelManagement.Application.Bookings.Queries.GetBookingsByUserId;
 using HotelManagement.Application.Common;
-using HotelManagement.Application.Users.Commands;
-using HotelManagement.Application.Users.Queries;
+using HotelManagement.Application.Users.Commands.DeleteUser;
+using HotelManagement.Application.Users.Commands.UpdateUser;
+using HotelManagement.Application.Users.Queries.GetAllUsers;
 using HotelManagement.Domain.Entities;
 using HotelManagement.Infrastructure.Identity;
 using MediatR;
@@ -32,11 +33,10 @@ namespace HotelManagement.Web.Controllers
 		/// </summary>
 		/// <returns>List of users.</returns>
 		/// <responce code="200">Return list of users.</responce>
-		[HttpGet]
-		[Authorize(Roles = "Admin")]
+		[HttpGet]		
 		public async Task<ActionResult<List<User>>> GetAllUsers()
 		{
-			var query = new GetAllUsers();
+			var query = new GetAllUsersQuery();
 			var users = await _mediator.Send(query);
 
 			if (users is null or [])
@@ -53,12 +53,11 @@ namespace HotelManagement.Web.Controllers
 		/// <param name="userId">User id/</param>
 		/// <returns>Get bookings of specific user/</returns>
 		/// <responce code="404">Not found/</responce>
-		/// <responce code="200">Bookings list/</responce>
-		[Authorize(Roles = "Admin")]
+		/// <responce code="200">Bookings list/</responce>		
 		[HttpGet("{userId}/bookings")]
 		public async Task<ActionResult> GetBookingsByUserId(Guid userId)
 		{
-			var query = new GetBookingsByUserId(userId);
+			var query = new GetBookingsByUserIdQuery(userId);
 			var result = await _mediator.Send(query);
 
 			if(result is null or [])
@@ -81,24 +80,16 @@ namespace HotelManagement.Web.Controllers
 		[HttpDelete("{id:guid}")]
 		public async Task<ActionResult> DeleteUser(Guid id)
 		{
-			try
-			{
-				var user = await _context.Users.FindAsync(id);
-				Guard.AgainstNull(user, nameof(user));
+			var user = await _context.Users.FindAsync(id);
+			Guard.AgainstNull(user, nameof(user));
 
-				var applicationUser = await _userManager.FindByEmailAsync(user.Email);
-				Guard.AgainstNull(applicationUser, nameof(applicationUser));
+			var applicationUser = await _userManager.FindByEmailAsync(user.Email);
+			Guard.AgainstNull(applicationUser, nameof(applicationUser));
 
-				var command = new DeleteUser(id);
+			var command = new DeleteUserCommand(id);
 
-				await _mediator.Send(command);
-				await _userManager.DeleteAsync(applicationUser);
-				
-			}
-			catch (Exception ex) 
-			{
-				return BadRequest(ex.Message);
-			}
+			await _mediator.Send(command);
+			await _userManager.DeleteAsync(applicationUser);
 
 			return NoContent();
 		}
@@ -111,10 +102,9 @@ namespace HotelManagement.Web.Controllers
 		/// <param name="command">User details.</param>
 		/// <returns></returns>
 		/// <responce code="200">No content.</responce>
-		/// <responce code="400">One or more errors have occured.</responce>
-		[Authorize(Roles = "Admin")]
+		/// <responce code="400">One or more errors have occured.</responce>		
 		[HttpPut("{id:guid}")]		
-		public async Task<ActionResult> UpdateUser(Guid id, [FromBody] UpdateUser command)
+		public async Task<ActionResult> UpdateUser(Guid id, [FromBody] UpdateUserCommand command)
 		{
 			if (id != command.Id)
 			{
@@ -122,17 +112,17 @@ namespace HotelManagement.Web.Controllers
 			}
 			
 			await _mediator.Send(command);
-
+			
 			var user = await _context.Users.FindAsync(id);
 			Guard.AgainstNull(user, nameof(user));
-			var userEmail = user.Email;
 
+			var userEmail = user.Email;
 			var applicationUser = await _userManager.FindByEmailAsync(userEmail);
 			Guard.AgainstNull(applicationUser, nameof(applicationUser));
 
 			await _userManager.UpdateAsync(applicationUser);
 
-			return NoContent();			
+			return NoContent();
 		}
 	}
 }

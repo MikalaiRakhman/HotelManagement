@@ -29,7 +29,6 @@ namespace HotelManagement.Web.Controllers
 		/// <returns></returns>
 		/// <responce code="200">User registered successfully.</responce>
 		/// <response code="400">Error messege.</response>
-
 		[HttpPost("register")]
 		public async Task<IActionResult> Register([FromBody] RegisterModel model)
 		{
@@ -63,27 +62,20 @@ namespace HotelManagement.Web.Controllers
 		/// <responce code="200">Acces-token and refresh-token.</responce>
 		[HttpPost("login")]
 		public async Task<IActionResult> Login([FromBody] LoginModel model, CancellationToken cancellationToken)
-		{
-			try
-			{
-				var applicationUser = await _userManager.FindByEmailAsync(model.Email);
+		{			
+			var applicationUser = await _userManager.FindByEmailAsync(model.Email);
 
-				Guard.AgainstUnauthorized(applicationUser);
+			Guard.AgainstUnauthorized(applicationUser);
 
-				var isValidPassword = await _userManager.CheckPasswordAsync(applicationUser, model.Password);
+			var isValidPassword = await _userManager.CheckPasswordAsync(applicationUser, model.Password);
 
-				Guard.AgainsInvalidPassword(isValidPassword);
+			Guard.AgainsInvalidPassword(isValidPassword);
 
-				var roles = await _userManager.GetRolesAsync(applicationUser);
-				var token = _tokenProvider.GenerateJwtToken(applicationUser, roles);
-				var refreshToken = _tokenProvider.GenerateRefreshToken(applicationUser.Id, cancellationToken);
+			var roles = await _userManager.GetRolesAsync(applicationUser);
+			var token = _tokenProvider.GenerateJwtToken(applicationUser, roles);
+			var refreshToken = _tokenProvider.GenerateRefreshToken(applicationUser.Id, cancellationToken);
 
-				return Ok(new { Token = token, RefreshToken = refreshToken.Result });
-			}
-			catch (Exception ex) 
-			{
-				return BadRequest(ex.Message);
-			}
+			return Ok(new { Token = token, RefreshToken = refreshToken.Result });
 		}
 
 		/// <summary>
@@ -97,16 +89,9 @@ namespace HotelManagement.Web.Controllers
 		[HttpPost("refresh-token")]
 		public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenModel model, CancellationToken cancellationToken)
 		{
-			try
-			{
-				var (newJwtToken, newRefreshToken) = await _tokenProvider.RefreshTokens(model.RefreshToken, cancellationToken);
+			var (newJwtToken, newRefreshToken) = await _tokenProvider.RefreshTokens(model.RefreshToken, cancellationToken);
 
-				return Ok(new { Token = newJwtToken, RefreshToken = newRefreshToken });
-			}
-			catch (UnauthorizedAccessException ex)
-			{
-				return Unauthorized(new { Error = ex.Message });
-			}
+			return Ok(new { Token = newJwtToken, RefreshToken = newRefreshToken });
 		}
 
 		private User ConvertToDomainUser(RegisterModel model)

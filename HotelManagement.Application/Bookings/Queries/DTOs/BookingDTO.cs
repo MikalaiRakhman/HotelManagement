@@ -6,5 +6,9 @@
 		public DateOnly StartDate { get; set; }
 		public DateOnly EndDate { get; set; }
 		public int TotalPrice { get; set; }
+		public string BookerEmail { get; set; }
+		public int RoomNumber { get; set; }
+
+
 	}
 }

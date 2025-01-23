@@ -1,6 +1,8 @@
-﻿using HotelManagement.Application.Bookings.Queries;
-using HotelManagement.Application.Rooms.Commands;
-using HotelManagement.Application.Rooms.Queries;
+﻿using HotelManagement.Application.Bookings.Queries.GetBookingsByRoomId;
+using HotelManagement.Application.Rooms.Commands.Create;
+using HotelManagement.Application.Rooms.Commands.Delete;
+using HotelManagement.Application.Rooms.Commands.Update;
+using HotelManagement.Application.Rooms.Queries.GetAllRooms;
 using HotelManagement.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Web.Controllers
 {
-	[Authorize("Admin")]
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
     public class RoomsController : Controller
@@ -28,7 +30,7 @@ namespace HotelManagement.Web.Controllers
 		[HttpGet]
 		public async Task<ActionResult<List<Room>>> GetAllRooms()
 		{
-			var query = new GetAllRooms();
+			var query = new GetAllRoomsQuery();
 			var rooms = await _mediator.Send(query);
 
 			if (rooms is null or [])
@@ -45,11 +47,11 @@ namespace HotelManagement.Web.Controllers
 		/// <param name="roomId">Room Id.</param>
 		/// <returns>List of bookings.</returns>
 		/// <responce code="200">Return list of booking.</responce>
-		/// <responce code="404">Not found.</responce>
+		/// <responce code="404">Not found.</responce>		
 		[HttpGet("{roomId}/bookings")]
 		public async Task<ActionResult> GetBookingsByRoomId(Guid roomId)
 		{
-			var query = new GetBookingsByRoomId(roomId);
+			var query = new GetBookingsByRoomIdQuery(roomId);
 			var result = await _mediator.Send(query);
 
 			if (result is null or [])
@@ -68,8 +70,9 @@ namespace HotelManagement.Web.Controllers
 		/// <returns>Room id</returns>
 		/// <responce code="200">Create new room.</responce>
 		/// <responce code="400">One or more errors have occured.</responce>
+		[Authorize(Roles = "Admin, Manager")]
 		[HttpPost]
-		public async Task<ActionResult<Guid>> CreateRoom([FromBody] CreateRoom command)
+		public async Task<ActionResult<Guid>> CreateRoom([FromBody] CreateRoomCommand command)
 		{
 			var roomId = await _mediator.Send(command);
 
@@ -78,7 +81,7 @@ namespace HotelManagement.Web.Controllers
 				return BadRequest("An arror occured!");
 			}
 
-			return Ok(roomId);			
+			return Ok(roomId);
 		}
 
 
@@ -89,21 +92,15 @@ namespace HotelManagement.Web.Controllers
 		/// <returns>No content.</returns>
 		/// <responce code="200">No content.</responce>
 		/// <responce code="400">Room with id was not found.</responce>
+		[Authorize(Roles = "Admin")]
 		[HttpDelete("{id:guid}")]
 		public async Task<ActionResult> DeleteRoom (Guid id)
-		{
-			try
-			{
-				var command = new DeleteRoom(id);
+		{			
+			var command = new DeleteRoomCommand(id);
 
-				await _mediator.Send(command);
+			await _mediator.Send(command);
 
-				return NoContent();
-			}
-			catch (Exception ex) 
-			{
-				return BadRequest(ex.Message);	
-			}			
+			return NoContent();
 		}
 
 
@@ -115,8 +112,9 @@ namespace HotelManagement.Web.Controllers
 		/// <returns></returns>
 		/// <responce code="400">One or more errors have occured.</responce>
 		/// <responce code="204">Room udated.</responce>
+		[Authorize(Roles = "Admin, Manager")]
 		[HttpPut("{id:guid}")]
-		public async Task<ActionResult> UpdateRoom(Guid id, [FromBody] UpdateRoom command)
+		public async Task<ActionResult> UpdateRoom(Guid id, [FromBody] UpdateRoomCommand command)
 		{
 			if (id != command.Id)
 			{
@@ -125,7 +123,7 @@ namespace HotelManagement.Web.Controllers
 
 			await _mediator.Send(command);
 
-			return NoContent();			
+			return NoContent();
 		}
 	}
 }

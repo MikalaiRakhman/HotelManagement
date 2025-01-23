@@ -28,6 +28,7 @@ namespace HotelManagement.Infrastructure.Identity
 			var claims = new List<Claim>
 			{
 				new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+				new Claim(ClaimTypes.Email, user.Email),
 			};
 
 			foreach (var role in roles)
@@ -42,7 +43,7 @@ namespace HotelManagement.Infrastructure.Identity
 				issuer: _configuration["Jwt:Issuer"],
 				audience: _configuration["Jwt:Audience"],
 				claims: claims,
-				expires: DateTime.UtcNow.AddMinutes(15),
+				expires: DateTime.UtcNow.AddMinutes(1),
 				signingCredentials: creds);
 
 			return new JwtSecurityTokenHandler().WriteToken(token);
