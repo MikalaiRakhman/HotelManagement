@@ -5,5 +5,5 @@ namespace HotelManagement.Application.Bookings.Queries.GetAllBookings
 {
 	public record GetAllBookingsQuery : IRequest<List<BookingDTO>>
 	{
-	}	
+	}
 }

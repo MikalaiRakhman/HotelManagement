@@ -1,7 +1,6 @@
-﻿using HotelManagement.Application.Common;
-using MediatR;
+﻿using MediatR;
 
 namespace HotelManagement.Application.Bookings.Commands.Delete
 {
-	public record DeleteBookingCommand(Guid Id) : IRequest;	
+	public record DeleteBookingCommand(Guid Id) : IRequest;
 }

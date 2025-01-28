@@ -20,17 +20,19 @@ namespace HotelManagement.Application.Bookings.Commands.Update
 				var entity = await _context.Bookings.FindAsync([request.Id], cancellationToken);
 				Guard.AgainstNull(entity, nameof(entity));
 
+				var foundUser = await _context.Users.FindAsync(request.UserId);
+				Guard.AgainstNull(foundUser, nameof(foundUser));
+
+				var foundRoom = await _context.Rooms.FindAsync(request.RoomId);
+				Guard.AgainstNull(entity.Room, nameof(entity.Room));
+
 				entity.UserId = request.UserId;
 				entity.RoomId = request.RoomId;
 				entity.StartDate = request.StartDate;
 				entity.EndDate = request.EndDate;
 				entity.TotalPrice = await CalculateTheCostOfBooking(request.StartDate, request.EndDate, request.RoomId);
-
-				entity.User = await _context.Users.FindAsync(request.UserId);
-				Guard.AgainstNull(entity.User, nameof(entity.User));
-
-				entity.Room = await _context.Rooms.FindAsync(request.RoomId);
-				Guard.AgainstNull(entity.Room, nameof(entity.Room));
+				entity.User = foundUser;
+				entity.Room = foundRoom!;
 
 				await _context.SaveChangesAsync(cancellationToken);
 			}

@@ -14,7 +14,7 @@ namespace HotelManagement.Infrastructure.Data
 		private readonly ILogger _logger;
 
 		public ApplicationDbContextInitialiser(
-			ApplicationDbContext context, 
+			ApplicationDbContext context,
 			RoleManager<IdentityRole<Guid>> roleManager,
 			UserManager<ApplicationUser> userManager,
 			ILogger logger)
@@ -35,9 +35,10 @@ namespace HotelManagement.Infrastructure.Data
 		public async Task SeedAsync()
 		{
 			_logger.Information("Seeding roles...");
+
 			foreach (var role in Enum.GetNames(typeof(ApplicationRole)))
 			{
-				if (!await _roleManager.RoleExistsAsync(role)) 
+				if (!await _roleManager.RoleExistsAsync(role))
 				{
 					_logger.Information($"Creating role: {role}");
 					await _roleManager.CreateAsync(new IdentityRole<Guid> { Name = role });

@@ -16,7 +16,7 @@ namespace HotelManagement.Web.Controllers
 	public class BookingsController : Controller
 	{
 		private readonly IMediator _mediator;
-		
+
 		public BookingsController(IMediator mediator)
 		{
 			_mediator = mediator;
@@ -50,7 +50,7 @@ namespace HotelManagement.Web.Controllers
 		/// <responce code="400">Returns message about problem.</responce>		
 		[HttpGet("{bookingId:guid}")]
 		public async Task<ActionResult> GetBookingDetails(Guid bookingId)
-		{			
+		{
 			var query = new GetBookingDetailsQuery(bookingId);
 			var result = await _mediator.Send(query);
 
@@ -71,7 +71,7 @@ namespace HotelManagement.Web.Controllers
 		/// <responce code="200">Return booking Id.</responce>
 		/// <recponce code="400">One or more errors occurred.</recponce>
 		[Authorize(Roles = "Admin, Manager, User")]
-		[HttpPost]		
+		[HttpPost]
 		public async Task<ActionResult<Guid>> CreateBooking([FromBody] CreateBookingCommand command)
 		{
 			var bookingId = await _mediator.Send(command);
@@ -96,7 +96,7 @@ namespace HotelManagement.Web.Controllers
 		public async Task<ActionResult> DeleteBooking(Guid id)
 		{
 			var command = new DeleteBookingCommand(id);
-			
+
 			await _mediator.Send(command);
 
 			return NoContent();
@@ -114,7 +114,7 @@ namespace HotelManagement.Web.Controllers
 		[HttpPut("{id:guid}")]
 		public async Task<ActionResult> UpdateBooking(Guid id, [FromBody] UpdateBookingCommand command)
 		{
-			if (id != command.Id)
+			if (id != command.Id) //Вместо этой проверки добавить UpdateBookingRequest без id, далее здесь формировать команду
 			{
 				return Ok("Booking Id in URL does not match with Id in command");
 			}
@@ -122,6 +122,6 @@ namespace HotelManagement.Web.Controllers
 			await _mediator.Send(command);
 
 			return NoContent();
-		}		
+		}
 	}
 }

@@ -42,6 +42,7 @@ namespace HotelManagement.Application.Rooms.Queries.GetAllRooms
 			{
 				if (IsCurrentDateInRange(booking.StartDate, booking.EndDate))
 				{
+					//Комната точно будет существовать?
 					var room = await _context.Rooms.FindAsync(booking.RoomId, cancellationToken);
 
 					room.IsAvailable = false;
@@ -54,7 +55,7 @@ namespace HotelManagement.Application.Rooms.Queries.GetAllRooms
 				}
 			}
 
-			_context.SaveChangesAsync(cancellationToken);
+			await _context.SaveChangesAsync(cancellationToken);
 		}
 	}
 }
