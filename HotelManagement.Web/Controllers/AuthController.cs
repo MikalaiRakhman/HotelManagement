@@ -40,7 +40,7 @@ namespace HotelManagement.Web.Controllers
 
 			var result = await _userManager.CreateAsync(appUser, model.Password);
 
-			if (!result.Succeeded) 
+			if (!result.Succeeded)
 			{
 				return BadRequest(result.Errors);
 			}
@@ -62,7 +62,7 @@ namespace HotelManagement.Web.Controllers
 		/// <responce code="200">Acces-token and refresh-token.</responce>
 		[HttpPost("login")]
 		public async Task<IActionResult> Login([FromBody] LoginModel model, CancellationToken cancellationToken)
-		{			
+		{
 			var applicationUser = await _userManager.FindByEmailAsync(model.Email);
 
 			Guard.AgainstUnauthorized(applicationUser);
@@ -94,10 +94,10 @@ namespace HotelManagement.Web.Controllers
 			return Ok(new { Token = newJwtToken, RefreshToken = newRefreshToken });
 		}
 
-		private User ConvertToDomainUser(RegisterModel model)
+		private static User ConvertToDomainUser(RegisterModel model)
 		{
 			return new User
-			{				
+			{
 				Email = model.Email,
 				FirstName = model.FirstName,
 				LastName = model.LastName,

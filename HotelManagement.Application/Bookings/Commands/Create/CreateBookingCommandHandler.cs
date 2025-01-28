@@ -43,8 +43,7 @@ namespace HotelManagement.Application.Bookings.Commands.Create
 					Room = room
 				};
 
-				await _context.Bookings.AddAsync(entity);
-
+				await _context.Bookings.AddAsync(entity, cancellationToken);
 				await _context.SaveChangesAsync(cancellationToken);
 
 				return entity.UserId;
@@ -74,7 +73,7 @@ namespace HotelManagement.Application.Bookings.Commands.Create
 			return !bookingsWhereRoomId.Any(booking => DoDateRangesOverlap(booking.StartDate, booking.EndDate, startDate, endDate));
 		}
 
-		public bool DoDateRangesOverlap(DateOnly startDate1, DateOnly endDate1, DateOnly startDate2, DateOnly endDate2)
+		public static bool DoDateRangesOverlap(DateOnly startDate1, DateOnly endDate1, DateOnly startDate2, DateOnly endDate2)
 		{
 			return startDate1 <= endDate2 && startDate2 <= endDate1;
 		}
