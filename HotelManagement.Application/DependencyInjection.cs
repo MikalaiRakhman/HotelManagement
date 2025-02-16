@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using HotelManagement.Application.Bookings.Services;
 using HotelManagement.Application.Common.Behavior;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,7 @@ namespace HotelManagement.Application
 		public static IServiceCollection AddApplicationServices(this IServiceCollection services) 
 		{
 			services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+			services.AddScoped<BookingsService>();
 
 			services.AddMediatR(cfg =>
 			{
