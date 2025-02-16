@@ -8,7 +8,5 @@
 		public int TotalPrice { get; set; }
 		public string BookerEmail { get; set; }
 		public int RoomNumber { get; set; }
-
-
 	}
 }

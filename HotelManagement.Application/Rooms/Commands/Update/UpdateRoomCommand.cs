@@ -1,5 +1,6 @@
 ﻿using HotelManagement.Domain.Enums;
 using MediatR;
+
 namespace HotelManagement.Application.Rooms.Commands.Update
 {
 	public record UpdateRoomCommand : IRequest
@@ -8,5 +9,5 @@ namespace HotelManagement.Application.Rooms.Commands.Update
 		public int RoomNumber { get; init; }
 		public RoomType RoomType { get; init; }
 		public int PricePerNight { get; init; }
-	}	
+	}
 }

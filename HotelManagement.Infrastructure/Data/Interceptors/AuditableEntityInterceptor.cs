@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace HotelManagement.Infrastructure.Data.Interceotors
+namespace HotelManagement.Infrastructure.Data.Interceotors //IntercePtors
 {
 	public class AuditableEntityInterceptor : SaveChangesInterceptor
 	{
@@ -14,11 +14,11 @@ namespace HotelManagement.Infrastructure.Data.Interceotors
 			_dateTime = dateTime;
 		}
 
-		public override InterceptionResult<int> SavingChanges (DbContextEventData eventData, InterceptionResult<int> result)
+		public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
 		{
 			UpdateEntities(eventData.Context);
 
-			return base.SavingChanges (eventData, result);
+			return base.SavingChanges(eventData, result);
 		}
 
 		public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
@@ -37,7 +37,7 @@ namespace HotelManagement.Infrastructure.Data.Interceotors
 
 			foreach (var entry in context.ChangeTracker.Entries<BaseAuditableEntity>())
 			{
-				if (entry.State is EntityState.Added or EntityState.Modified || entry.HasChangedOwnedEntities() )
+				if (entry.State is EntityState.Added or EntityState.Modified || entry.HasChangedOwnedEntities())
 				{
 					var utsNow = _dateTime.GetUtcNow();
 

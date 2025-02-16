@@ -45,8 +45,7 @@ namespace HotelManagement.Application.Bookings.Commands.Create
 					Room = room
 				};
 
-				await _context.Bookings.AddAsync(entity);
-
+				await _context.Bookings.AddAsync(entity, cancellationToken);
 				await _context.SaveChangesAsync(cancellationToken);
 
 				return entity.UserId;

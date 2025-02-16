@@ -13,9 +13,9 @@ namespace HotelManagement.Web.Controllers
 	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
-    public class RoomsController : Controller
-    {
-        private readonly IMediator _mediator;
+	public class RoomsController : Controller
+	{
+		private readonly IMediator _mediator;
 
 		public RoomsController(IMediator mediator)
 		{
@@ -56,7 +56,7 @@ namespace HotelManagement.Web.Controllers
 
 			if (result is null or [])
 			{
-				return NotFound();
+				return NotFound(); //Сообщения (или их отсутствие) должны быть консистентны во всех контроллерах
 			}
 
 			return Ok(result);
@@ -76,9 +76,9 @@ namespace HotelManagement.Web.Controllers
 		{
 			var roomId = await _mediator.Send(command);
 
-			if (roomId == Guid.Empty) 
+			if (roomId == Guid.Empty)
 			{
-				return BadRequest("An arror occured!");
+				return BadRequest("An arror occured!"); //Конкретизировать ошибку (Создание комнаты не удалось)
 			}
 
 			return Ok(roomId);
@@ -94,8 +94,8 @@ namespace HotelManagement.Web.Controllers
 		/// <responce code="400">Room with id was not found.</responce>
 		[Authorize(Roles = "Admin")]
 		[HttpDelete("{id:guid}")]
-		public async Task<ActionResult> DeleteRoom (Guid id)
-		{			
+		public async Task<ActionResult> DeleteRoom(Guid id)
+		{
 			var command = new DeleteRoomCommand(id);
 
 			await _mediator.Send(command);
@@ -116,7 +116,7 @@ namespace HotelManagement.Web.Controllers
 		[HttpPut("{id:guid}")]
 		public async Task<ActionResult> UpdateRoom(Guid id, [FromBody] UpdateRoomCommand command)
 		{
-			if (id != command.Id)
+			if (id != command.Id) //Та же история про реквест и формирование команды, чтобы исключить двойной проброс id
 			{
 				return BadRequest("Room Id in URL does not match with Id in command");
 			}
