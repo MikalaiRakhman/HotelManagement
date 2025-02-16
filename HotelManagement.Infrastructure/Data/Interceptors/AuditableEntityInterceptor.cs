@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace HotelManagement.Infrastructure.Data.Interceotors //IntercePtors
+namespace HotelManagement.Infrastructure.Data.Interceptors
 {
 	public class AuditableEntityInterceptor : SaveChangesInterceptor
 	{

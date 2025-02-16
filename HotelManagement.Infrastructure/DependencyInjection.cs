@@ -1,6 +1,6 @@
 ﻿using HotelManagement.Application.Common;
 using HotelManagement.Infrastructure.Data;
-using HotelManagement.Infrastructure.Data.Interceotors;
+using HotelManagement.Infrastructure.Data.Interceptors;
 using HotelManagement.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;

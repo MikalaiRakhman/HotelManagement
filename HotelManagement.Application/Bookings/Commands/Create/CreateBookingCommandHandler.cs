@@ -7,13 +7,11 @@ namespace HotelManagement.Application.Bookings.Commands.Create
 {
 	public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommand, Guid>
 	{
-		private readonly IApplicationDbContext _context;
-		private readonly BookingsService _bookingsService;
+		private readonly IApplicationDbContext _context;		
 
-		public CreateBookingCommandHandler(IApplicationDbContext context, BookingsService bookingsService)
+		public CreateBookingCommandHandler(IApplicationDbContext context)
 		{
-			_context = context;
-			_bookingsService = bookingsService;
+			_context = context;			
 		}
 
 		public async Task<Guid> Handle(CreateBookingCommand request, CancellationToken cancellationToken)
@@ -26,7 +24,7 @@ namespace HotelManagement.Application.Bookings.Commands.Create
 				throw new Exception("The booking day cannot be before the current day.");
 			}
 
-			if (await _bookingsService.CheckRoomAvailibilityAsync(request.RoomId, request.StartDate, request.EndDate))
+			if (await BookingsService.CheckRoomAvailibilityAsync(request.RoomId, request.StartDate, request.EndDate, _context))
 			{
 				var user = await _context.Users.FindAsync(request.UserId);
 				Guard.AgainstNull(user, nameof(user));
@@ -40,7 +38,7 @@ namespace HotelManagement.Application.Bookings.Commands.Create
 					RoomId = request.RoomId,
 					StartDate = request.StartDate,
 					EndDate = request.EndDate,
-					TotalPrice = await _bookingsService.CalculateTheCostOfBooking(request.StartDate, request.EndDate, request.RoomId),
+					TotalPrice = await BookingsService.CalculateTheCostOfBooking(request.StartDate, request.EndDate, request.RoomId, _context),
 					User = user,
 					Room = room
 				};

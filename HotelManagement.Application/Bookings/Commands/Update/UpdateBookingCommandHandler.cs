@@ -8,12 +8,10 @@ namespace HotelManagement.Application.Bookings.Commands.Update
 	public class UpdateBookingCommandHandler : IRequestHandler<UpdateBookingCommand>
 	{
 		private readonly IApplicationDbContext _context;
-		private readonly BookingsService _bookingsService;
 
-		public UpdateBookingCommandHandler(IApplicationDbContext context, BookingsService bookingsService)
+		public UpdateBookingCommandHandler(IApplicationDbContext context)
 		{
 			_context = context;
-			_bookingsService = bookingsService;
 		}
 
 		public async Task Handle(UpdateBookingCommand request, CancellationToken cancellationToken)
@@ -61,7 +59,7 @@ namespace HotelManagement.Application.Bookings.Commands.Update
 				.Where(b => b.RoomId == roomId)
 				.ToListAsync();
 
-			return !bookingsWhereRoomId.Any(booking => _bookingsService.DoDateRangesOverlap(booking.StartDate, booking.EndDate, startDate, endDate));
+			return !bookingsWhereRoomId.Any(booking => BookingsService.DoDateRangesOverlap(booking.StartDate, booking.EndDate, startDate, endDate));
 		}
 	}
 }

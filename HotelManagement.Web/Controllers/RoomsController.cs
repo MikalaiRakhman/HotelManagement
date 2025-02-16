@@ -35,7 +35,7 @@ namespace HotelManagement.Web.Controllers
 
 			if (rooms is null or [])
 			{
-				return NotFound("No rooms found");
+				return NotFound("No rooms found.");
 			}
 
 			return Ok(rooms);
@@ -56,7 +56,7 @@ namespace HotelManagement.Web.Controllers
 
 			if (result is null or [])
 			{
-				return NotFound(); //Сообщения (или их отсутствие) должны быть консистентны во всех контроллерах
+				return NotFound("No bookings found.");
 			}
 
 			return Ok(result);
@@ -78,7 +78,7 @@ namespace HotelManagement.Web.Controllers
 
 			if (roomId == Guid.Empty)
 			{
-				return BadRequest("An arror occured!"); //Конкретизировать ошибку (Создание комнаты не удалось)
+				return BadRequest("Room creation failed!");
 			}
 
 			return Ok(roomId);
@@ -116,7 +116,7 @@ namespace HotelManagement.Web.Controllers
 		[HttpPut("{id:guid}")]
 		public async Task<ActionResult> UpdateRoom(Guid id, [FromBody] UpdateRoomCommand command)
 		{
-			if (id != command.Id) //Та же история про реквест и формирование команды, чтобы исключить двойной проброс id
+			if (id != command.Id)
 			{
 				return BadRequest("Room Id in URL does not match with Id in command");
 			}
