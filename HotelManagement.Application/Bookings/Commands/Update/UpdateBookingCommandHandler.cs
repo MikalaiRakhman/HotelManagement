@@ -1,4 +1,5 @@
-﻿using HotelManagement.Application.Common;
+﻿using HotelManagement.Application.Bookings.Services;
+using HotelManagement.Application.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,10 +8,12 @@ namespace HotelManagement.Application.Bookings.Commands.Update
 	public class UpdateBookingCommandHandler : IRequestHandler<UpdateBookingCommand>
 	{
 		private readonly IApplicationDbContext _context;
+		private readonly BookingsService _bookingsService;
 
-		public UpdateBookingCommandHandler(IApplicationDbContext context)
+		public UpdateBookingCommandHandler(IApplicationDbContext context, BookingsService bookingsService)
 		{
 			_context = context;
+			_bookingsService = bookingsService;
 		}
 
 		public async Task Handle(UpdateBookingCommand request, CancellationToken cancellationToken)
@@ -56,12 +59,7 @@ namespace HotelManagement.Application.Bookings.Commands.Update
 				.Where(b => b.RoomId == roomId)
 				.ToListAsync();
 
-			return !bookingsWhereRoomId.Any(booking => DoDateRangesOverlap(booking.StartDate, booking.EndDate, startDate, endDate));
-		}
-
-		public bool DoDateRangesOverlap(DateOnly startDate1, DateOnly endDate1, DateOnly startDate2, DateOnly endDate2)
-		{
-			return startDate1 <= endDate2 && startDate2 <= endDate1;
+			return !bookingsWhereRoomId.Any(booking => _bookingsService.DoDateRangesOverlap(booking.StartDate, booking.EndDate, startDate, endDate));
 		}
 	}
 }
